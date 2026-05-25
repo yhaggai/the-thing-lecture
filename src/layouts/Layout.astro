@@ -45,7 +45,8 @@ const {
 		<div class="fixed inset-0 pointer-events-none z-[100] scanline opacity-25"></div>
 
 		<!-- Top Navigation (Shared Component) - Desktop Only -->
-		<nav dir="ltr" class="hidden md:flex justify-between items-center w-full px-margin-desktop py-4 max-w-container-max mx-auto bg-surface-container-lowest border-b border-outline-variant bg-opacity-90 backdrop-blur-md sticky top-0 z-50">
+		<nav dir="ltr" class="hidden md:flex w-screen bg-surface-container-lowest border-b border-outline-variant bg-opacity-90 backdrop-blur-md sticky top-0 z-50">
+			<div class="flex justify-between items-center w-full max-w-container-max mx-auto px-margin-desktop py-4">
 			<div class="flex items-center gap-4">
 				<div class="w-8 h-8 border border-neon-blue rounded-full flex items-center justify-center relative glow-border overflow-hidden">
 					<canvas id="gc" class="w-full h-full block" width="64" height="64"></canvas>
@@ -78,6 +79,7 @@ const {
 					<span class="font-terminal-xs text-[8px] text-terminal-green">ONLINE</span>
 				</div>
 			</div>
+			</div>
 		</nav>
 
 		<!-- Main Slot Content -->
@@ -100,7 +102,8 @@ const {
 		</nav>
 
 		<!-- Footer -->
-		<footer dir="ltr" class="w-full bg-surface-container-lowest border-t border-outline-variant py-8 px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-gutter z-10 relative mt-12 mb-16 md:mb-0 max-w-container-max mx-auto">
+		<footer dir="ltr" class="w-screen bg-surface-container-lowest border-t border-outline-variant z-10 relative mt-12 mb-16 md:mb-0">
+			<div class="flex flex-col md:flex-row justify-between items-center gap-gutter py-8 px-margin-desktop max-w-container-max mx-auto w-full">
 			<div class="flex flex-col text-center md:text-left">
 				<span class="font-label-caps text-hazard-orange tracking-widest text-sm">OUTPOST 31 FILM SERIES</span>
 				<span class="font-terminal-xs text-[10px] text-on-surface-variant opacity-80 mt-1 uppercase">EXPLORING CINEMA BEYOND THE EDGE</span>
@@ -130,6 +133,7 @@ const {
 				</div>
 				<span class="font-terminal-xs text-[8px] text-on-surface-variant text-center md:text-right uppercase">U.S. ANTARCTICA RESEARCH PROGRAM</span>
 				<span class="font-terminal-xs text-[8px] text-on-surface-variant text-center md:text-right">STATION 31 --- EST. 1982</span>
+			</div>
 			</div>
 		</footer>
 
