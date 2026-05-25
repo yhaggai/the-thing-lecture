@@ -92,8 +92,9 @@ import Countdown from "./Countdown.astro";
 				<div class="absolute inset-0 overflow-hidden transition-transform duration-700 group-hover:scale-[1.02]">
 					<div class="crt-lowres-feed">
 					<video
+						id="hero-video"
 						class="crt-surveillance-feed"
-						src="/Static_surveillance_camera_foo.mp4"
+						src="/base-snow-loop.mp4"
 						autoplay
 						muted
 						loop
@@ -122,7 +123,7 @@ import Countdown from "./Countdown.astro";
 				<button 
 					id="hero-play-btn"
 					aria-label="Play security transmission trailer"
-					class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white/40 hover:text-neon-blue text-5xl hover:scale-110 active:scale-95 transition-all duration-300 drop-shadow-[0_0_15px_rgba(0,0,0,0.8)] cursor-pointer focus:outline-none"
+					class="hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white/40 hover:text-neon-blue text-5xl hover:scale-110 active:scale-95 transition-all duration-300 drop-shadow-[0_0_15px_rgba(0,0,0,0.8)] cursor-pointer focus:outline-none"
 				>
 					<span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'FILL' 1;">play_circle</span>
 				</button>
@@ -155,6 +156,7 @@ import Countdown from "./Countdown.astro";
 			window.dispatchEvent(new CustomEvent("open-trailer"));
 		});
 	}
+
 
 	// Blizzard Snowstorm Effect (2 layers: Background and Foreground)
 	(function(){
