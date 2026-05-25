@@ -1,0 +1,83 @@
+---
+---
+
+<div class="bg-surface-container/80 backdrop-blur-md border border-outline-variant p-4 relative hud-border w-full">
+	<!-- Corners for HUD styling -->
+	<div class="hud-corner-tl"></div>
+	<div class="hud-corner-tr"></div>
+	<div class="hud-corner-bl"></div>
+	<div class="hud-corner-br"></div>
+
+	<div class="flex justify-between items-center mb-4 border-b border-outline-variant/50 pb-2">
+		<div class="flex items-center gap-2">
+			<div class="w-1.5 h-1.5 bg-hazard-orange rounded-full animate-pulse"></div>
+			<span class="font-terminal-xs text-xs text-neon-blue uppercase tracking-wider">EVENT STARTS IN</span>
+		</div>
+		<div class="flex gap-1 opacity-50">
+			<div class="w-1 h-3 bg-neon-blue transform skew-x-12"></div>
+			<div class="w-1 h-3 bg-neon-blue transform skew-x-12"></div>
+			<div class="w-1 h-3 bg-neon-blue transform skew-x-12"></div>
+		</div>
+	</div>
+
+	<div class="grid grid-cols-4 gap-2 text-center" id="countdown-timer">
+		<div class="flex flex-col border-r border-outline-variant/30 pr-2">
+			<span class="font-terminal-xs text-3xl text-primary font-bold tracking-tight drop-shadow-[0_0_8px_rgba(181,196,255,0.6)]" id="days-count">00</span>
+			<span class="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">Days</span>
+		</div>
+		<div class="flex flex-col border-r border-outline-variant/30 px-2">
+			<span class="font-terminal-xs text-3xl text-primary font-bold tracking-tight drop-shadow-[0_0_8px_rgba(181,196,255,0.6)]" id="hours-count">00</span>
+			<span class="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">Hours</span>
+		</div>
+		<div class="flex flex-col border-r border-outline-variant/30 px-2">
+			<span class="font-terminal-xs text-3xl text-primary font-bold tracking-tight drop-shadow-[0_0_8px_rgba(181,196,255,0.6)]" id="minutes-count">00</span>
+			<span class="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">Mins</span>
+		</div>
+		<div class="flex flex-col pl-2">
+			<span class="font-terminal-xs text-3xl text-primary font-bold tracking-tight animate-[pulse_1s_ease-in-out_infinite] drop-shadow-[0_0_8px_rgba(181,196,255,0.6)]" id="seconds-count">00</span>
+			<span class="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">Secs</span>
+		</div>
+	</div>
+</div>
+
+<script>
+	// Event target date: Saturday, June 20, 2026, at 7:30 PM (19:30) local time.
+	const targetDate = new Date("2026-06-20T19:30:00").getTime();
+
+	const updateTimer = () => {
+		const now = new Date().getTime();
+		const difference = targetDate - now;
+
+		if (difference <= 0) {
+			const countdownEl = document.getElementById("countdown-timer");
+			if (countdownEl) {
+				countdownEl.innerHTML = `<span class="col-span-4 font-label-caps text-hazard-orange text-lg animate-pulse uppercase tracking-widest">TRANSMISSION ACTIVE / SCREENING LIVE</span>`;
+			}
+			return;
+		}
+
+		// Calculations for days, hours, minutes, and seconds
+		const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+		const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+		const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+		const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+		// Pad with leading zeros
+		const pad = (num: number) => String(num).padStart(2, "0");
+
+		const daysEl = document.getElementById("days-count");
+		const hoursEl = document.getElementById("hours-count");
+		const minutesEl = document.getElementById("minutes-count");
+		const secondsEl = document.getElementById("seconds-count");
+
+		if (daysEl) daysEl.innerText = pad(days);
+		if (hoursEl) hoursEl.innerText = pad(hours);
+		if (minutesEl) minutesEl.innerText = pad(minutes);
+		if (secondsEl) secondsEl.innerText = pad(seconds);
+	};
+
+	// Initial run
+	updateTimer();
+	// Run every second
+	setInterval(updateTimer, 1000);
+</script>

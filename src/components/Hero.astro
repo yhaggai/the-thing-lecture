@@ -1,0 +1,246 @@
+---
+import Countdown from "./Countdown.astro";
+---
+
+<section id="home" class="grid grid-cols-1 lg:grid-cols-12 gap-gutter min-h-[600px] relative">
+	<!-- Hero Background Image (Spans Full Width behind content) -->
+	<div class="absolute inset-0 z-0 border border-outline-variant/30 glow-border rounded overflow-hidden">
+		<img 
+			alt="Outpost 31 snowy arctic blizzard cinematic backdrop" 
+			class="w-full h-full object-cover opacity-60 crt-flicker mix-blend-screen" 
+			src="/images/background.png"
+		/>
+		<!-- Overlay gradient for text readability -->
+		<div class="absolute inset-0 bg-gradient-to-r from-surface via-surface/85 to-transparent"></div>
+		<div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent"></div>
+	</div>
+	<!-- Blizzard Snowstorm Effect (transparent background) -->
+	<canvas id="snowCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
+
+	<!-- Left Content: Title & Info -->
+	<div class="lg:col-span-7 z-10 flex flex-col justify-center p-6 md:p-8">
+		<p class="font-label-caps text-label-caps text-hazard-orange mb-3 tracking-widest text-xs">A SPECIAL SCREENING & DISCUSSION</p>
+		<h2 class="font-headline-lg text-lg text-secondary tracking-[0.2em] mb-1 uppercase">JOHN CARPENTER'S</h2>
+		<h1 class="font-distressed text-[72px] leading-[72px] md:text-[110px] md:leading-[100px] text-on-surface mb-6 drop-shadow-[0_0_20px_rgba(38,101,253,0.3)] transform -skew-x-6 select-none select-none">
+			THE<br>THING
+		</h1>
+		<div class="flex items-center gap-4 mb-8">
+			<div class="border border-neon-blue px-4 py-1 flex items-center gap-2 bg-surface/50 backdrop-blur-sm hud-border">
+				<span class="font-label-caps text-sm text-neon-blue tracking-wider font-bold">1982</span>
+				<div class="flex gap-1">
+					<div class="w-1.5 h-3 bg-neon-blue transform skew-x-12"></div>
+					<div class="w-1.5 h-3 bg-neon-blue transform skew-x-12 opacity-80"></div>
+					<div class="w-1.5 h-3 bg-neon-blue transform skew-x-12 opacity-60"></div>
+				</div>
+			</div>
+			<div class="font-terminal-xs text-[10px] text-neon-blue tracking-widest bg-ghost-blue px-3 py-1">
+				35MM ARCHIVAL PRINT
+			</div>
+		</div>
+
+		<div class="max-w-md space-y-4 mb-8">
+			<p class="font-terminal-xs text-xs text-on-surface-variant border-l-2 border-neon-blue pl-4 py-0.5 italic">
+				"Man is the warmest place to hide."
+			</p>
+			<p class="font-body-sm text-sm text-on-surface-variant leading-relaxed">
+				Join us for a special archival screening of John Carpenter's 1982 sci-fi horror masterpiece <strong class="text-white font-medium">The Thing</strong>, followed by a detailed technical discussion on practical special effects, cold-war isolation, and cosmic terror.
+			</p>
+		</div>
+
+		<!-- Logistics Grid -->
+		<div class="grid grid-cols-2 md:grid-cols-3 gap-6 pt-6 border-t border-outline-variant/40">
+			<div class="flex items-start gap-3">
+				<span class="material-symbols-outlined text-neon-blue">calendar_today</span>
+				<div class="flex flex-col">
+					<span class="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">Date</span>
+					<span class="font-label-caps text-xs text-hazard-orange tracking-widest font-semibold mt-0.5">SAT. JUNE 20, 2026</span>
+				</div>
+			</div>
+			<div class="flex items-start gap-3">
+				<span class="material-symbols-outlined text-neon-blue">schedule</span>
+				<div class="flex flex-col">
+					<span class="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">Time</span>
+					<span class="font-label-caps text-xs text-hazard-orange tracking-widest font-semibold mt-0.5">7:30 PM EST</span>
+				</div>
+			</div>
+			<div class="flex items-start gap-3 col-span-2 md:col-span-1">
+				<span class="material-symbols-outlined text-neon-blue">location_on</span>
+				<div class="flex flex-col">
+					<span class="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">Station</span>
+					<span class="font-label-caps text-xs text-hazard-orange tracking-widest font-semibold mt-0.5">BROOKLYN, NY</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Right Content: Widgets -->
+	<div class="lg:col-span-5 z-10 flex flex-col justify-between gap-6 p-6 h-full min-h-[500px]">
+		<!-- Countdown Widget -->
+		<Countdown />
+
+		<!-- Video Thumbnail / Feed -->
+		<div class="bg-surface-container/95 border border-outline-variant p-1.5 relative group mt-auto shadow-lg">
+			<!-- Faux Tape Label -->
+			<div class="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-[#d2c9b5] text-surface px-4 py-0.5 z-20 border border-black/25 shadow-md rotate-1 flex items-center gap-2">
+				<div class="w-1.5 h-1.5 bg-red-600 rounded-full animate-ping"></div>
+				<span class="font-[Courier] text-xs font-black uppercase tracking-widest text-black/90">CHECK CHNL. 31</span>
+			</div>
+			
+			<div class="relative overflow-hidden border border-black h-[200px] bg-black">
+				<img 
+					alt="Outpost 31 Security Feed surveillance feed mockup" 
+					class="w-full h-full object-cover filter grayscale sepia-[0.1] contrast-[1.1] brightness-[0.75] group-hover:scale-105 transition-transform duration-700" 
+					src="/images/surveillance.jpg"
+				/>
+				<div class="absolute inset-0 bg-neon-blue/10 mix-blend-color pointer-events-none crt-flicker"></div>
+				<div class="absolute inset-0 scanline opacity-40 pointer-events-none"></div>
+				
+				<!-- Overlay UI indicators -->
+				<div class="absolute bottom-2 left-3 right-3 flex justify-between items-center text-white/80 border-b border-white/20 pb-1 font-terminal-xs text-[9px] tracking-widest select-none pointer-events-none">
+					<span>/// SECURE BROADCAST</span>
+					<span>PLAY [SP]</span>
+				</div>
+				<div class="absolute top-2 left-3 text-white/80 font-terminal-xs text-[9px] tracking-widest select-none pointer-events-none flex items-center gap-1">
+					<div class="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse"></div>
+					<span>REC CAM_04</span>
+				</div>
+				
+				<!-- Play button -->
+				<button 
+					id="hero-play-btn"
+					aria-label="Play security transmission trailer"
+					class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white/40 hover:text-neon-blue text-5xl hover:scale-110 active:scale-95 transition-all duration-300 drop-shadow-[0_0_15px_rgba(0,0,0,0.8)] cursor-pointer focus:outline-none"
+				>
+					<span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+				</button>
+			</div>
+
+			<!-- Hazard Warning Bar -->
+			<div class="mt-1.5 flex h-6 border border-outline-variant bg-surface select-none">
+				<div class="flex items-center justify-center px-2 border-r border-outline-variant text-hazard-orange">
+					<span class="material-symbols-outlined text-[14px]">science</span>
+				</div>
+				<div class="flex-grow flex items-center px-2 bg-hazard-orange/10 overflow-hidden">
+					<div class="w-full flex items-center">
+						<span class="font-terminal-xs text-[9px] text-hazard-orange mr-2 font-bold shrink-0">WARNING:</span>
+						<span class="font-terminal-xs text-[9px] text-on-surface-variant tracking-wider uppercase whitespace-nowrap animate-[marquee_15s_linear_infinite]">
+							INFECTION LEVEL UNRESOLVED --- LOCKDOWN LEVEL-03 ENGAGED --- AVOID DIRECT CONTACT
+						</span>
+					</div>
+				</div>
+				<div class="w-16 bg-hazard-stripes shrink-0"></div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+	const playBtn = document.getElementById("hero-play-btn");
+	if (playBtn) {
+		playBtn.addEventListener("click", () => {
+			// Dispatch event to show the TrailerModal
+			window.dispatchEvent(new CustomEvent("open-trailer"));
+		});
+	}
+
+	// Blizzard Snowstorm Effect (transparent background)
+	(function(){
+		const canvas = document.getElementById('snowCanvas') as HTMLCanvasElement | null;
+		if (!canvas) return;
+		const ctx = canvas.getContext('2d');
+		if (!ctx) return;
+		
+		let currentWind = 8;
+		let targetWind = 8;
+		let activeCount = 300;
+		const MAX_COUNT = 600;
+
+		interface Flake {
+			x: number;
+			y: number;
+			r: number;
+			speed: number;
+			wobble: number;
+			wobbleSpeed: number;
+			opacity: number;
+			layer: number;
+		}
+		let flakes: Flake[] = [];
+		function resize(){ 
+			if (canvas) {
+				canvas.width = window.innerWidth; 
+				canvas.height = window.innerHeight; 
+			}
+		}
+		resize(); 
+		window.addEventListener('resize', resize);
+		function rnd(): Flake { 
+			return { 
+				x: Math.random()*(canvas?.width || window.innerWidth), 
+				y: Math.random()*(canvas?.height || window.innerHeight) - (canvas?.height || window.innerHeight), 
+				r: Math.random()*2.8+0.5, 
+				speed: Math.random()*2.5+1.2, 
+				wobble: Math.random()*Math.PI*2, 
+				wobbleSpeed:(Math.random()-0.5)*0.04, 
+				opacity:Math.random()*0.7+0.3, 
+				layer:Math.random() 
+			}; 
+		}
+		// Allocate maximum flakes capacity
+		for(let i=0;i<MAX_COUNT;i++){ 
+			const f=rnd(); 
+			f.y=Math.random()*(canvas?.height || window.innerHeight); 
+			flakes.push(f); 
+		}
+
+		// Randomize storm intensity values every 10 seconds
+		setInterval(() => {
+			targetWind = Math.random() * 20 - 8; // Range: -8 (heavy left gust) to 12 (heavy right gust)
+			activeCount = Math.floor(Math.random() * 350 + 150); // Range: 150 to 500 active particles
+		}, 10000);
+
+		function draw(){
+			if (!canvas || !ctx) return;
+			ctx.clearRect(0,0,canvas.width,canvas.height);
+			
+			// Smoothly interpolate wind gusts
+			currentWind += (targetWind - currentWind) * 0.02;
+
+			// Slice to current active count for dynamic density adjustments
+			const activeFlakes = flakes.slice(0, activeCount);
+
+			activeFlakes.forEach(f=>{
+				const d=0.5+f.layer*0.5; 
+				f.wobble+=f.wobbleSpeed; 
+				f.x+=currentWind*d+Math.sin(f.wobble)*0.8*d; 
+				f.y+=f.speed*d+Math.abs(currentWind)*0.18;
+				if(f.y>canvas.height+10){
+					f.y=-10;
+					f.x=Math.random()*canvas.width;
+				}
+				if(f.x>canvas.width+20) f.x=-10; 
+				if(f.x<-20) f.x=canvas.width+10;
+				const b=200+Math.floor(f.layer*55);
+				ctx.globalAlpha=f.opacity*d; 
+				ctx.beginPath(); 
+				ctx.arc(f.x,f.y,f.r*d,0,Math.PI*2); 
+				ctx.fillStyle=`rgb(${b},${b},255)`; 
+				ctx.fill(); 
+				ctx.globalAlpha=1;
+			});
+			requestAnimationFrame(draw);
+		}
+		draw();
+	})();
+</script>
+
+<style>
+	/* Custom marquee style for the hazard ticker */
+	@keyframes marquee {
+		0% { transform: translateX(100%); }
+		100% { transform: translateX(-100%); }
+	}
+	.animate-\[marquee_15s_linear_infinite\] {
+		animation: marquee 18s linear infinite;
+	}
+</style>

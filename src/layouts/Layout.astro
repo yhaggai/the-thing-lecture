@@ -1,0 +1,249 @@
+---
+import '../styles/global.css';
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const { 
+	title = "OUTPOST 31 FILM SERIES - THE THING", 
+	description = "Join us for a special 35mm screening of John Carpenter's 1982 sci-fi horror classic 'The Thing' followed by an in-depth lecture and discussion." 
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html class="dark" lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		
+		<!-- Open Graph Meta Tags -->
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content="website" />
+		<meta property="og:image" content="/images/hero.jpg" />
+
+		<!-- Material Symbols -->
+		<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+		
+		<!-- gl-matrix for WebGL globe animation -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js" is:inline></script>
+
+		<!-- Google Fonts -->
+		<link href="https://fonts.googleapis.com" rel="preconnect" />
+		<link crossorigin href="https://fonts.gstatic.com" rel="preconnect" />
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@600;700&family=Creepster&display=swap" rel="stylesheet" />
+	</head>
+	<body class="bg-surface text-on-surface min-h-screen flex flex-col font-body-md overflow-x-hidden selection:bg-neon-blue selection:text-white">
+		<!-- Ambient Scanline Overlay for CRT vibe -->
+		<div class="fixed inset-0 pointer-events-none z-[100] scanline opacity-25"></div>
+
+		<!-- Top Navigation (Shared Component) - Desktop Only -->
+		<nav class="hidden md:flex justify-between items-center w-full px-margin-desktop py-4 max-w-container-max mx-auto bg-surface-container-lowest border-b border-outline-variant bg-opacity-90 backdrop-blur-md sticky top-0 z-50">
+			<div class="flex items-center gap-4">
+				<div class="w-8 h-8 border border-neon-blue rounded-full flex items-center justify-center relative glow-border overflow-hidden">
+					<canvas id="gc" class="w-full h-full block" width="64" height="64"></canvas>
+					<!-- Crosshair overlay -->
+					<div class="absolute inset-0 border-[0.5px] border-neon-blue/30 rounded-full pointer-events-none"></div>
+				</div>
+				<div class="flex flex-col">
+					<span class="font-headline-lg text-lg uppercase tracking-widest text-on-surface leading-tight">OUTPOST 31</span>
+					<span class="font-label-caps text-[9px] text-hazard-orange tracking-widest leading-none">FILM SERIES</span>
+				</div>
+			</div>
+
+			<div class="flex items-center gap-4 border border-outline-variant p-2 bg-surface-container-low hud-border">
+				<div class="w-12 h-8 bg-black border border-neon-blue/30 relative overflow-hidden flex items-center justify-center">
+					<div class="absolute inset-0 flex items-end">
+						<!-- Fake waveform animation -->
+						<div class="h-1/2 w-1 bg-neon-blue mx-px animate-[pulse_1s_ease-in-out_infinite]"></div>
+						<div class="h-full w-1 bg-neon-blue mx-px animate-[pulse_1.2s_ease-in-out_infinite]"></div>
+						<div class="h-3/4 w-1 bg-neon-blue mx-px animate-[pulse_0.8s_ease-in-out_infinite]"></div>
+						<div class="h-1/4 w-1 bg-neon-blue mx-px animate-[pulse_1.5s_ease-in-out_infinite]"></div>
+						<div class="h-2/3 w-1 bg-neon-blue mx-px animate-[pulse_1.1s_ease-in-out_infinite]"></div>
+					</div>
+				</div>
+				<div class="flex flex-col">
+					<span class="font-terminal-xs text-[8px] text-neon-blue">U.S. ANTARCTICA</span>
+					<span class="font-terminal-xs text-[8px] text-neon-blue">RESEARCH STATION 31</span>
+					<span class="font-terminal-xs text-[8px] text-on-surface-variant">WYOMING, U.S.A.</span>
+				</div>
+				<div class="flex items-center gap-1 ml-2">
+					<div class="w-1.5 h-1.5 rounded-full bg-terminal-green animate-pulse"></div>
+					<span class="font-terminal-xs text-[8px] text-terminal-green">ONLINE</span>
+				</div>
+			</div>
+		</nav>
+
+		<!-- Main Slot Content -->
+		<slot />
+
+		<!-- Bottom Navigation (Mobile Only) -->
+		<nav class="docked full-width bottom-0 z-50 md:hidden bg-surface-container-lowest border-t border-outline-variant bg-opacity-95 backdrop-blur-lg fixed left-0 w-full flex justify-around items-center px-margin-mobile py-2 shadow-lg">
+			<a class="flex flex-col items-center justify-center text-neon-blue bg-ghost-blue rounded-xl p-2 scale-90 transition-transform" href="#home">
+				<span class="material-symbols-outlined text-neon-blue text-xl" style="font-variation-settings: 'FILL' 1;">home</span>
+				<span class="font-label-caps text-[9px] mt-1">HOME</span>
+			</a>
+			<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-neon-blue transition-colors" href="#itinerary">
+				<span class="material-symbols-outlined text-on-surface-variant text-xl">event</span>
+				<span class="font-label-caps text-[9px] mt-1">SCHEDULE</span>
+			</a>
+			<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-neon-blue transition-colors" href="#lecturer">
+				<span class="material-symbols-outlined text-on-surface-variant text-xl">person</span>
+				<span class="font-label-caps text-[9px] mt-1">LECTURER</span>
+			</a>
+			<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-neon-blue transition-colors" href="#the-film">
+				<span class="material-symbols-outlined text-on-surface-variant text-xl">movie</span>
+				<span class="font-label-caps text-[9px] mt-1">THE FILM</span>
+			</a>
+		</nav>
+
+		<!-- Footer -->
+		<footer class="w-full bg-surface-container-lowest border-t border-outline-variant py-8 px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-gutter z-10 relative mt-12 mb-16 md:mb-0 max-w-container-max mx-auto">
+			<div class="flex flex-col text-center md:text-left">
+				<span class="font-label-caps text-hazard-orange tracking-widest text-sm">OUTPOST 31 FILM SERIES</span>
+				<span class="font-terminal-xs text-[10px] text-on-surface-variant opacity-80 mt-1 uppercase">EXPLORING CINEMA BEYOND THE EDGE</span>
+			</div>
+			
+			<div class="flex items-center gap-4 text-on-surface-variant opacity-80 mt-4 md:mt-0">
+				<span class="font-terminal-xs text-[10px] tracking-wider">FOLLOW US</span>
+				<div class="flex gap-2">
+					<a class="hover:text-neon-blue transition-colors border border-outline-variant px-2 py-0.5" href="#">
+						<span class="font-terminal-xs text-[10px]">IG</span>
+					</a>
+					<a class="hover:text-neon-blue transition-colors border border-outline-variant px-2 py-0.5" href="#">
+						<span class="font-terminal-xs text-[10px]">X</span>
+					</a>
+				</div>
+			</div>
+			
+			<div class="flex flex-col md:flex-row gap-4 md:gap-6 font-terminal-xs text-[10px] text-on-surface-variant opacity-80 mt-4 md:mt-0 text-center">
+				<a class="hover:text-neon-blue underline transition-colors" href="#">CONTACT</a>
+				<a class="hover:text-neon-blue underline transition-colors" href="mailto:info@outpost31films.com">INFO@OUTPOST31FILMS.COM</a>
+			</div>
+			
+			<div class="flex flex-col items-center md:items-end opacity-80 border-t md:border-t-0 md:border-l border-outline-variant/30 pt-4 md:pt-0 md:pl-4 mt-4 md:mt-0">
+				<div class="flex gap-1 mb-1 opacity-50">
+					<div class="w-px h-3 bg-on-surface-variant"></div>
+					<div class="w-px h-3 bg-on-surface-variant"></div>
+					<div class="w-0.5 h-3 bg-on-surface-variant"></div>
+					<div class="w-px h-3 bg-on-surface-variant"></div>
+					<div class="w-1 h-3 bg-on-surface-variant"></div>
+					<div class="w-px h-3 bg-on-surface-variant"></div>
+				</div>
+				<span class="font-terminal-xs text-[8px] text-on-surface-variant text-center md:text-right uppercase">U.S. ANTARCTICA RESEARCH PROGRAM</span>
+				<span class="font-terminal-xs text-[8px] text-on-surface-variant text-center md:text-right">STATION 31 --- EST. 1982</span>
+			</div>
+		</footer>
+
+		<!-- WebGL globe animation initialization script -->
+		<script is:inline>
+			(function(){
+				const canvas = document.getElementById('gc');
+				if (!canvas) return;
+				canvas.width = 64;
+				canvas.height = 64;
+
+				const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+				if(!gl){ return; }
+
+				gl.viewport(0, 0, 64, 64);
+
+				const vs = `
+					attribute vec3 pos;
+					uniform mat4 mvp;
+					void main(){ gl_Position = mvp * vec4(pos,1.0); }
+				`;
+				const fs = `
+					precision mediump float;
+					void main(){ gl_FragColor = vec4(0.15, 0.40, 0.99, 1.0); }
+				`;
+
+				function compile(type, src){
+					const s = gl.createShader(type);
+					gl.shaderSource(s, src);
+					gl.compileShader(s);
+					return s;
+				}
+
+				const prog = gl.createProgram();
+				gl.attachShader(prog, compile(gl.VERTEX_SHADER, vs));
+				gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fs));
+				gl.linkProgram(prog);
+				gl.useProgram(prog);
+
+				const posLoc = gl.getAttribLocation(prog, 'pos');
+				const mvpLoc = gl.getUniformLocation(prog, 'mvp');
+
+				const lines = [];
+				const LAT = 9, LON = 16, R = 1.0;
+
+				for(let i = 0; i <= LAT; i++){
+					const phi = Math.PI * (-0.5 + i/LAT);
+					const y = Math.sin(phi)*R;
+					const r = Math.cos(phi)*R;
+					for(let j = 0; j < LON; j++){
+						const a0 = 2*Math.PI * j/LON;
+						const a1 = 2*Math.PI * (j+1)/LON;
+						lines.push(r*Math.cos(a0), y, r*Math.sin(a0));
+						lines.push(r*Math.cos(a1), y, r*Math.sin(a1));
+					}
+				}
+
+				for(let j = 0; j < LON; j++){
+					const lon = 2*Math.PI * j/LON;
+					const cx = Math.cos(lon), cz = Math.sin(lon);
+					for(let i = 0; i < LAT*2; i++){
+						const phi0 = Math.PI * (-0.5 + i/(LAT*2));
+						const phi1 = Math.PI * (-0.5 + (i+1)/(LAT*2));
+						lines.push(Math.cos(phi0)*cx*R, Math.sin(phi0)*R, Math.cos(phi0)*cz*R);
+						lines.push(Math.cos(phi1)*cx*R, Math.sin(phi1)*R, Math.cos(phi1)*cz*R);
+					}
+				}
+
+				const buf = gl.createBuffer();
+				gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+				gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(lines), gl.STATIC_DRAW);
+				gl.enableVertexAttribArray(posLoc);
+				gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
+
+				gl.enable(gl.DEPTH_TEST);
+
+				const proj = mat4.create();
+				mat4.perspective(proj, 0.9, 1, 0.1, 100);
+
+				const view = mat4.create();
+				mat4.translate(view, view, [0, 0, -3.2]);
+
+				const tilt = mat4.create();
+				mat4.rotateX(tilt, tilt, 0.3);
+
+				function frame(t){
+					gl.clearColor(0.0, 0.0, 0.0, 0.0);
+					gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+					const rot = mat4.create();
+					mat4.rotateY(rot, tilt, t * 0.001);
+
+					const mv = mat4.create();
+					mat4.multiply(mv, view, rot);
+
+					const mvp = mat4.create();
+					mat4.multiply(mvp, proj, mv);
+
+					gl.uniformMatrix4fv(mvpLoc, false, mvp);
+					gl.drawArrays(gl.LINES, 0, lines.length / 3);
+
+					requestAnimationFrame(frame);
+				}
+
+				requestAnimationFrame(frame);
+			})();
+		</script>
+	</body>
+</html>

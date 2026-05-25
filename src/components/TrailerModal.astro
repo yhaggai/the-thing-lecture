@@ -1,0 +1,108 @@
+---
+---
+
+<div id="trailer-modal" class="fixed inset-0 z-[200] hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md transition-opacity duration-300 opacity-0">
+	<!-- CRT background grid and scanlines -->
+	<div class="absolute inset-0 pointer-events-none scanline opacity-30"></div>
+	
+	<!-- Modal Box -->
+	<div class="w-full max-w-4xl bg-surface-container-lowest border border-neon-blue relative glow-border p-4 flex flex-col gap-4 hud-border shadow-2xl scale-95 transition-transform duration-300">
+		<div class="hud-corner-tl"></div>
+		<div class="hud-corner-tr"></div>
+		<div class="hud-corner-bl"></div>
+		<div class="hud-corner-br"></div>
+
+		<!-- Title bar -->
+		<div class="flex justify-between items-center border-b border-outline-variant/60 pb-2">
+			<div class="flex items-center gap-2">
+				<div class="w-2.5 h-2.5 bg-terminal-green rounded-full animate-pulse"></div>
+				<span class="font-label-caps text-xs text-neon-blue uppercase tracking-widest">SECURE LINK FEED: TAPE_ID_82_THING</span>
+			</div>
+			<button id="close-modal-btn" class="font-terminal-xs text-xs text-hazard-orange hover:text-white border border-hazard-orange/30 px-3 py-1 bg-hazard-orange/10 hover:bg-hazard-orange/20 transition-colors uppercase tracking-widest">
+				[ CLOSE FEED ]
+			</button>
+		</div>
+
+		<!-- Video container with responsive aspect ratio -->
+		<div class="relative w-full aspect-video bg-black border border-outline-variant overflow-hidden group">
+			<div class="absolute inset-0 bg-neon-blue/5 mix-blend-color pointer-events-none crt-flicker"></div>
+			<div class="absolute inset-0 scanline opacity-25 pointer-events-none"></div>
+			<!-- Trailer YouTube iframe -->
+			<iframe 
+				id="trailer-iframe"
+				class="w-full h-full"
+				src="" 
+				title="John Carpenter's The Thing 1982 Trailer" 
+				frameborder="0" 
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+				allowfullscreen
+			></iframe>
+		</div>
+
+		<!-- Tape metadata footer -->
+		<div class="flex justify-between items-center text-on-surface-variant text-[10px] font-terminal-xs">
+			<span>SYSTEM STATUS: STREAMING SECURE COMS</span>
+			<span>COMPLETED DECONTAMINATION SCAN</span>
+		</div>
+	</div>
+</div>
+
+<script>
+	const modal = document.getElementById("trailer-modal");
+	const iframe = document.getElementById("trailer-iframe") as HTMLIFrameElement | null;
+	const closeBtn = document.getElementById("close-modal-btn");
+	const youtubeTrailerUrl = "https://www.youtube.com/embed/5ftmr17M-a4?autoplay=1&rel=0";
+
+	// Show modal function
+	const showModal = () => {
+		if (modal && iframe) {
+			iframe.src = youtubeTrailerUrl; // Load the trailer on click
+			modal.classList.remove("hidden");
+			modal.classList.add("flex");
+			// Trigger transition repaint
+			setTimeout(() => {
+				modal.classList.remove("opacity-0");
+				modal.querySelector(".max-w-4xl")?.classList.remove("scale-95");
+			}, 10);
+		}
+	};
+
+	// Hide modal function
+	const hideModal = () => {
+		if (modal && iframe) {
+			modal.classList.add("opacity-0");
+			modal.querySelector(".max-w-4xl")?.classList.add("scale-95");
+			
+			// Wait for transition to complete before hiding fully
+			setTimeout(() => {
+				modal.classList.remove("flex");
+				modal.classList.add("hidden");
+				iframe.src = ""; // Clear src to stop video audio completely
+			}, 300);
+		}
+	};
+
+	// Listen for custom trigger from play buttons
+	window.addEventListener("open-trailer", showModal);
+	
+	// Close handlers
+	if (closeBtn) {
+		closeBtn.addEventListener("click", hideModal);
+	}
+
+	// Close on clicking backdrop
+	if (modal) {
+		modal.addEventListener("click", (e) => {
+			if (e.target === modal) {
+				hideModal();
+			}
+		});
+	}
+
+	// Close on Escape key
+	window.addEventListener("keydown", (e) => {
+		if (e.key === "Escape" && modal && !modal.classList.contains("hidden")) {
+			hideModal();
+		}
+	});
+</script>

@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@theme {
+  --color-tertiary-fixed: #ffdbcf;
+  --color-alert-red: #ffb4ab;
+  --color-surface-container-highest: #32343e;
+  --color-on-primary: #00287c;
+  --color-secondary: #b9c7df;
+  --color-tertiary-fixed-dim: #ffb59a;
+  --color-surface: #11131c;
+  --color-on-surface: #e1e1ee;
+  --color-surface-container: #1d1f28;
+  --color-secondary-fixed-dim: #b9c7df;
+  --color-primary-fixed: #dce1ff;
+  --color-on-tertiary: #5b1b00;
+  --color-error-container: #93000a;
+  --color-error: #ffb4ab;
+  --color-outline-variant: #434655;
+  --color-on-secondary-container: #abb9d1;
+  --color-on-error-container: #ffdad6;
+  --color-secondary-container: #3c4a5e;
+  --color-outline: #8d90a1;
+  --color-tertiary: #ffb59a;
+  --color-surface-bright: #373942;
+  --color-neon-blue: #2665fd;
+  --color-terminal-green: #22c55e;
+  --color-surface-container-high: #282a33;
+  --color-inverse-surface: #e1e1ee;
+  --color-on-secondary-fixed: #0d1c2e;
+  --color-on-background: #e1e1ee;
+  --color-surface-tint: #b5c4ff;
+  --color-on-primary-fixed-variant: #003cad;
+  --color-on-primary-container: #f9f7ff;
+  --color-on-secondary-fixed-variant: #3a485b;
+  --color-surface-container-lowest: #0c0e16;
+  --color-surface-container-low: #191b24;
+  --color-on-tertiary-container: #fff7f4;
+  --color-on-secondary: #233144;
+  --color-on-primary-fixed: #00164d;
+  --color-background: #11131c;
+  --color-on-error: #690005;
+  --color-on-tertiary-fixed: #380d00;
+  --color-primary-fixed-dim: #b5c4ff;
+  --color-tertiary-container: #c94600;
+  --color-surface-variant: #32343e;
+  --color-surface-dim: #11131c;
+  --color-on-surface-variant: #c3c5d8;
+  --color-inverse-on-surface: #2e3039;
+  --color-ghost-blue: rgba(38, 101, 253, 0.15);
+  --color-hazard-orange: #f59e0b;
+  --color-primary-container: #2665fd;
+  --color-inverse-primary: #0050e1;
+  --color-secondary-fixed: #d5e3fc;
+  --color-on-tertiary-fixed-variant: #802a00;
+  --color-primary: #b5c4ff;
+
+  --radius-DEFAULT: 0.125rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.5rem;
+  --radius-full: 0.75rem;
+
+  --spacing-gutter: 16px;
+  --spacing-margin-desktop: 32px;
+  --spacing-margin-mobile: 16px;
+  --spacing-container-max: 1280px;
+  --spacing-unit: 4px;
+
+  --font-headline-lg-mobile: "Space Grotesk", sans-serif;
+  --font-body-md: "Inter", sans-serif;
+  --font-terminal-xs: "JetBrains Mono", monospace;
+  --font-label-caps: "JetBrains Mono", monospace;
+  --font-body-sm: "Inter", sans-serif;
+  --font-headline-xl: "Space Grotesk", sans-serif;
+  --font-headline-lg: "Space Grotesk", sans-serif;
+  --font-distressed: "Creepster", cursive;
+
+  --background-image-hazard-stripes: repeating-linear-gradient(45deg, #f59e0b, #f59e0b 10px, transparent 10px, transparent 20px);
+  --background-image-hazard-stripes-dark: repeating-linear-gradient(45deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.2) 10px, transparent 10px, transparent 20px);
+}
+
+/* Retro CRT and HUD Styling Utilities */
+.scanline {
+    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+    background-size: 100% 4px;
+}
+
+.crt-flicker {
+    animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+    0% { opacity: 0.95; }
+    50% { opacity: 1; }
+    100% { opacity: 0.98; }
+}
+
+.glow-border {
+    box-shadow: inset 0 0 10px rgba(38, 101, 253, 0.2);
+}
+
+.hud-border {
+    border: 1px solid rgba(38, 101, 253, 0.3);
+    position: relative;
+}
+
+.hud-border::before, .hud-border::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-color: rgba(38, 101, 253, 0.8);
+    border-style: solid;
+}
+.hud-border::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
+.hud-border::after { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
+
+.hud-corner-tl { position: absolute; top: 0; left: 0; width: 10px; height: 10px; border-top: 2px solid #2665fd; border-left: 2px solid #2665fd; }
+.hud-corner-tr { position: absolute; top: 0; right: 0; width: 10px; height: 10px; border-top: 2px solid #2665fd; border-right: 2px solid #2665fd; }
+.hud-corner-bl { position: absolute; bottom: 0; left: 0; width: 10px; height: 10px; border-bottom: 2px solid #2665fd; border-left: 2px solid #2665fd; }
+.hud-corner-br { position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; border-bottom: 2px solid #2665fd; border-right: 2px solid #2665fd; }

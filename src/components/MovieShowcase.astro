@@ -1,0 +1,176 @@
+---
+---
+
+<section id="the-film" class="relative">
+	<div class="bg-surface-container border border-outline-variant p-6 md:p-8 relative hud-border shadow-lg">
+		<div class="hud-corner-tl"></div>
+		<div class="hud-corner-tr"></div>
+		<div class="hud-corner-bl"></div>
+		<div class="hud-corner-br"></div>
+		
+		<div class="border-b border-outline-variant/50 pb-2 mb-8 flex justify-between items-center">
+			<span class="font-label-caps text-neon-blue tracking-widest text-sm">ARCHIVE FILE: PROJECT THING (1982)</span>
+			<span class="font-terminal-xs text-[10px] text-hazard-orange opacity-80 uppercase">// LEVEL-04 ACCESS ON</span>
+		</div>
+		
+		<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
+			<!-- Technical Specifications Card (col-span-4) -->
+			<div class="lg:col-span-4 border border-outline-variant/40 bg-black/40 p-4 font-terminal-xs relative flex flex-col gap-4">
+				<span class="text-neon-blue text-xs font-bold uppercase tracking-widest border-b border-outline-variant/30 pb-1.5 flex items-center gap-1.5">
+					<span class="material-symbols-outlined text-[14px]">settings</span>
+					TECHNICAL LOG SHEET
+				</span>
+				
+				<div class="flex flex-col gap-3 text-xs">
+					<div class="flex justify-between border-b border-outline-variant/20 pb-1">
+						<span class="text-on-surface-variant">DIRECTOR:</span>
+						<span class="text-white font-medium">JOHN CARPENTER</span>
+					</div>
+					<div class="flex justify-between border-b border-outline-variant/20 pb-1">
+						<span class="text-on-surface-variant">PRODUCERS:</span>
+						<span class="text-white font-medium">TURMAN-FOSTER</span>
+					</div>
+					<div class="flex justify-between border-b border-outline-variant/20 pb-1">
+						<span class="text-on-surface-variant">WRITER:</span>
+						<span class="text-white font-medium">BILL LANCASTER</span>
+					</div>
+					<div class="flex justify-between border-b border-outline-variant/20 pb-1">
+						<span class="text-on-surface-variant">COMPOSER:</span>
+						<span class="text-white font-medium">ENNIO MORRICONE</span>
+					</div>
+					<div class="flex justify-between border-b border-outline-variant/20 pb-1">
+						<span class="text-on-surface-variant">RELEASE:</span>
+						<span class="text-white font-medium">JUNE 25, 1982</span>
+					</div>
+					<div class="flex justify-between border-b border-outline-variant/20 pb-1">
+						<span class="text-on-surface-variant">BUDGET:</span>
+						<span class="text-white font-medium">$15,000,000</span>
+					</div>
+					<div class="flex justify-between border-b border-outline-variant/20 pb-1">
+						<span class="text-on-surface-variant">FX TEAM:</span>
+						<span class="text-hazard-orange font-medium font-bold">ROB BOTTIN (22 YRS OLD)</span>
+					</div>
+				</div>
+
+				<div class="bg-hazard-stripes-dark h-5 border border-outline-variant/40 mt-2 flex items-center justify-center">
+					<span class="text-[9px] text-hazard-orange font-bold tracking-widest uppercase">STRICT QUARANTINE ACTIVE</span>
+				</div>
+			</div>
+
+			<!-- Practical Effects Dossier Tabs (col-span-8) -->
+			<div class="lg:col-span-8 flex flex-col gap-4">
+				<p class="font-body-sm text-sm text-on-surface-variant leading-relaxed">
+					John Carpenter’s *The Thing* is globally celebrated as a masterclass in practical visual effects. Spearheaded by 22-year-old Rob Bottin and a team of 40 artists working 7-day weeks, the film rejected standard monster suits in favor of rubber, steel, slime, and hydraulic systems to create an organism that is constantly changing.
+				</p>
+				
+				<!-- Tabs Navigation -->
+				<div class="flex flex-wrap border-b border-outline-variant/30 font-terminal-xs text-xs mt-2 select-none">
+					<button 
+						id="tab-kennel-btn"
+						class="px-4 py-2 border-b-2 border-neon-blue text-neon-blue bg-neon-blue/5 hover:bg-neon-blue/10 transition-colors uppercase tracking-wider font-bold cursor-pointer"
+					>
+						[ FILE_01: DOG-KENNEL THING ]
+					</button>
+					<button 
+						id="tab-norris-btn"
+						class="px-4 py-2 border-b-2 border-transparent text-on-surface-variant hover:text-white transition-colors uppercase tracking-wider font-bold cursor-pointer"
+					>
+						[ FILE_02: NORRIS HEAD-SPIDER ]
+					</button>
+					<button 
+						id="tab-split-btn"
+						class="px-4 py-2 border-b-2 border-transparent text-on-surface-variant hover:text-white transition-colors uppercase tracking-wider font-bold cursor-pointer"
+					>
+						[ FILE_03: SPLIT-FACE MUTANT ]
+					</button>
+				</div>
+
+				<!-- Tab Contents -->
+				<div class="border border-outline-variant/30 bg-black/10 p-4 font-terminal-xs">
+					
+					<!-- Tab 1: Kennel Thing -->
+					<div id="tab-kennel-content" class="flex flex-col gap-3">
+						<div class="flex justify-between items-center text-xs text-hazard-orange">
+							<span>RECORD: INFECTION_CASE_01</span>
+							<span>CLASSIFICATION: HIGHLY HOSTILE</span>
+						</div>
+						<h4 class="text-white font-bold text-sm uppercase">THE DOG-KENNEL THING</h4>
+						<p class="text-xs text-on-surface-variant leading-relaxed">
+							The first full physical reveal of the alien organism inside the sled dog enclosure. Built utilizing an intricate steel skeleton frame, pneumatic bellows, air bladders to simulate pulsing flesh, urethane slime, and real animal intestines. 
+						</p>
+						<div class="border-t border-outline-variant/20 pt-2 flex items-center justify-between text-[10px] text-on-surface-variant">
+							<span>MECHANICS: 12 OPERATORS, DUAL HYDRAULICS</span>
+							<span>MATERIAL: SILICONE, URETHANE FOAM</span>
+						</div>
+					</div>
+
+					<!-- Tab 2: Norris Head-Spider (Hidden by default) -->
+					<div id="tab-norris-content" class="hidden flex flex-col gap-3">
+						<div class="flex justify-between items-center text-xs text-hazard-orange">
+							<span>RECORD: INFECTION_CASE_04</span>
+							<span>CLASSIFICATION: ORGAN MUTATION</span>
+						</div>
+						<h4 class="text-white font-bold text-sm uppercase">THE NORRIS HEAD-SPIDER & CHEST-MOUTH</h4>
+						<p class="text-xs text-on-surface-variant leading-relaxed">
+							During a chest defibrillation attempt, Norris's chest cavity splits into a massive maw, severing Dr. Copper's arms, while his head tears itself free, grows arachnid legs, and crawls away. Constructed with fiberglass molds, dental acrylic teeth, melted plastics, and puppet rigs operating from beneath a false floor.
+						</p>
+						<div class="border-t border-outline-variant/20 pt-2 flex items-center justify-between text-[10px] text-on-surface-variant">
+							<span>MECHANICS: REVERSE DECAPITATION RIG</span>
+							<span>MATERIAL: LATEX, DENTAL ACRYLIC, STEEL WIRE</span>
+						</div>
+					</div>
+
+					<!-- Tab 3: Split-Face Mutant (Hidden by default) -->
+					<div id="tab-split-content" class="hidden flex flex-col gap-3">
+						<div class="flex justify-between items-center text-xs text-hazard-orange">
+							<span>RECORD: INFECTION_CASE_02</span>
+							<span>CLASSIFICATION: MACRO CELLULAR HYBRID</span>
+						</div>
+						<h4 class="text-white font-bold text-sm uppercase">THE SPLIT-FACE MUTANT (BENNINGS/THING)</h4>
+						<p class="text-xs text-on-surface-variant leading-relaxed">
+							The grotesque, half-absorbed hybrid of Bennings discovered in the ice kennel. Bottin designed the iconic 'split-face' structure using foam latex molds, gelatin skin compounds, and air hoses to show the flesh stretching and shifting in cold air.
+						</p>
+						<div class="border-t border-outline-variant/20 pt-2 flex items-center justify-between text-[10px] text-on-surface-variant">
+							<span>MECHANICS: THERMOPLASTIC EXPANDING SHELL</span>
+							<span>MATERIAL: GELATIN, FOAM LATEX, LIQUID SILICONE</span>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+	const tabs = [
+		{ btnId: "tab-kennel-btn", contentId: "tab-kennel-content" },
+		{ btnId: "tab-norris-btn", contentId: "tab-norris-content" },
+		{ btnId: "tab-split-btn", contentId: "tab-split-content" }
+	];
+
+	tabs.forEach((tab, index) => {
+		const btn = document.getElementById(tab.btnId);
+		const content = document.getElementById(tab.contentId);
+
+		if (btn && content) {
+			btn.addEventListener("click", () => {
+				// Hide all contents and remove active styling from all buttons
+				tabs.forEach(t => {
+					const b = document.getElementById(t.btnId);
+					const c = document.getElementById(t.contentId);
+					if (b && c) {
+						c.classList.add("hidden");
+						b.classList.remove("border-neon-blue", "text-neon-blue", "bg-neon-blue/5");
+						b.classList.add("border-transparent", "text-on-surface-variant");
+					}
+				});
+
+				// Show target content and add active styling
+				content.classList.remove("hidden");
+				btn.classList.remove("border-transparent", "text-on-surface-variant");
+				btn.classList.add("border-neon-blue", "text-neon-blue", "bg-neon-blue/5");
+			});
+		}
+	});
+</script>
