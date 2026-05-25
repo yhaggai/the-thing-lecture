@@ -449,6 +449,7 @@
     "  LOGS       - Scan classified data logs",
     "  READ       - Read specific file, e.g., 'READ BLAIR.LOG'",
     "  RSVP       - E.g. 'RSVP J.R. MACREADY'. Register for screening",
+    "  WHATSAPP   - Join Outpost 31 secure communication channel",
     "  COLOR      - Cycle Phosphor color themes",
     "  CLEAR      - Purge screen terminal memory",
     "================================================"
@@ -617,6 +618,18 @@
           "------------------------------------------------"
         ]);
       }
+    } else if (cmd === 'WHATSAPP' || cmd === 'JOIN' || cmd === 'CHAT') {
+      audio.playBeep(1200, 0.2);
+      addOutputLines([
+        "------------------------------------------------",
+        "ESTABLISHING SECURE COM-LINK CHNL. WHATSAPP...",
+        "STATUS: CONNECTED",
+        "LINK: <a href='https://chat.whatsapp.com/IdrJQ24IP9vF2Owfvu3TGA?mode=gi_t' target='_blank' style='color:#22c55e;text-decoration:underline;'>CLICK HERE TO JOIN THE OUTPOST 31 GROUP</a>",
+        "------------------------------------------------"
+      ]);
+      setTimeout(() => {
+        window.open('https://chat.whatsapp.com/IdrJQ24IP9vF2Owfvu3TGA?mode=gi_t', '_blank');
+      }, 500);
     } else {
       addOutputLines([`COMMAND/PROTOCOL NOT SUPPORTED: '${cmd}'`]);
     }
