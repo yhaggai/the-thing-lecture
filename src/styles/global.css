@@ -174,10 +174,13 @@
 .material-symbols-outlined {
     display: inline-block;
     vertical-align: middle;
-    transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease, transform 0.3s ease;
     filter: drop-shadow(0 0 2px currentColor);
 }
 
 .material-symbols-outlined:hover {
-    filter: drop-shadow(0 0 10px currentColor);
+    color: #38bdf8 !important; /* Vibrant bright blue/cyan */
+    filter: drop-shadow(0 0 12px #38bdf8) brightness(1.6);
+    transform: scale(1.15);
+    cursor: pointer;
 }

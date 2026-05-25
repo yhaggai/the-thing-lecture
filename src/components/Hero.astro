@@ -21,8 +21,8 @@ import Countdown from "./Countdown.astro";
 
 	<!-- Left Content: Title & Info -->
 	<div class="lg:col-span-7 z-10 flex flex-col justify-center p-6 md:p-8">
-		<p class="font-label-caps text-label-caps text-hazard-orange mb-3 tracking-widest text-xs">A SPECIAL SCREENING & DISCUSSION</p>
-		<h2 class="font-headline-lg text-lg text-secondary tracking-[0.2em] mb-1 uppercase">JOHN CARPENTER'S</h2>
+		<p class="font-label-caps text-label-caps text-hazard-orange mb-3 tracking-widest text-xs">הקרנת על מסך ענק והרצאת עומק</p>
+		<h2 class="font-headline-lg text-lg text-secondary tracking-[0.2em] mb-1 uppercase">של ג׳ון קרפנטר</h2>
 		<h1 class="font-distressed text-[72px] leading-[72px] md:text-[110px] md:leading-[100px] text-on-surface mb-6 drop-shadow-[0_0_20px_rgba(38,101,253,0.3)] transform -skew-x-6 select-none select-none">
 			THE<br>THING
 		</h1>
@@ -36,40 +36,48 @@ import Countdown from "./Countdown.astro";
 				</div>
 			</div>
 			<div class="font-terminal-xs text-[10px] text-neon-blue tracking-widest bg-ghost-blue px-3 py-1">
-				35MM ARCHIVAL PRINT
+				עותק ארכיוני 35 מ״מ
 			</div>
 		</div>
 
 		<div class="max-w-md space-y-4 mb-8">
-			<p class="font-terminal-xs text-xs text-on-surface-variant border-l-2 border-neon-blue pl-4 py-0.5 italic">
-				"Man is the warmest place to hide."
+			<p class="font-terminal-xs text-xs text-on-surface-variant border-r-2 border-neon-blue pr-4 pl-0 py-0.5 italic">
+				״האדם הוא המקום החם ביותר להתחבא בו.״
 			</p>
-			<p class="font-body-sm text-sm text-on-surface-variant leading-relaxed">
-				Join us for a special archival screening of John Carpenter's 1982 sci-fi horror masterpiece <strong class="text-white font-medium">The Thing</strong>, followed by a detailed technical discussion on practical special effects, cold-war isolation, and cosmic terror.
-			</p>
+			<div class="bg-surface-container/80 backdrop-blur-md border border-outline-variant p-4 relative hud-border">
+				<p class="font-body-sm text-sm text-on-surface-variant leading-relaxed m-0">
+					הצטרפו אלינו להקרנת ארכיון מיוחדת של יצירת המופת במדע בדיוני ואימה משנת 1982 של ג׳ון קרפנטר <strong class="text-white font-medium">The Thing</strong>, ולאחריה דיון טכני מפורט על אפקטים מיוחדים פרקטיים, בידוד של תקופת המלחמה הקרה ואימה קוסמית.
+				</p>
+			</div>
 		</div>
 
 		<!-- Logistics Grid -->
-		<div class="grid grid-cols-2 md:grid-cols-3 gap-6 pt-6 border-t border-outline-variant/40">
-			<div class="flex items-start gap-3">
-				<span class="material-symbols-outlined text-neon-blue">calendar_today</span>
-				<div class="flex flex-col">
-					<span class="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">Date</span>
-					<span class="font-label-caps text-xs text-hazard-orange tracking-widest font-semibold mt-0.5">SAT. JUNE 20, 2026</span>
+		<div class="bg-surface-container/80 backdrop-blur-md border border-outline-variant p-4 relative hud-border w-full">
+			<div class="hud-corner-tl"></div>
+			<div class="hud-corner-tr"></div>
+			<div class="hud-corner-bl"></div>
+			<div class="hud-corner-br"></div>
+			<div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+				<div class="flex items-start gap-3">
+					<span class="material-symbols-outlined text-neon-blue">calendar_today</span>
+					<div class="flex flex-col">
+						<span class="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">תאריך</span>
+						<span class="font-label-caps text-xs text-hazard-orange tracking-widest font-semibold mt-0.5">יום חמישי, 11 ביוני, 2026</span>
+					</div>
 				</div>
-			</div>
-			<div class="flex items-start gap-3">
-				<span class="material-symbols-outlined text-neon-blue">schedule</span>
-				<div class="flex flex-col">
-					<span class="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">Time</span>
-					<span class="font-label-caps text-xs text-hazard-orange tracking-widest font-semibold mt-0.5">7:30 PM EST</span>
+				<div class="flex items-start gap-3">
+					<span class="material-symbols-outlined text-neon-blue">schedule</span>
+					<div class="flex flex-col">
+						<span class="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">שעה</span>
+						<span class="font-label-caps text-xs text-hazard-orange tracking-widest font-semibold mt-0.5">19:30</span>
+					</div>
 				</div>
-			</div>
-			<div class="flex items-start gap-3 col-span-2 md:col-span-1">
-				<span class="material-symbols-outlined text-neon-blue">location_on</span>
-				<div class="flex flex-col">
-					<span class="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">Station</span>
-					<span class="font-label-caps text-xs text-hazard-orange tracking-widest font-semibold mt-0.5">BROOKLYN, NY</span>
+				<div class="flex items-start gap-3 col-span-2 md:col-span-1">
+					<span class="material-symbols-outlined text-neon-blue">location_on</span>
+					<div class="flex flex-col">
+						<span class="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">תחנה</span>
+						<span class="font-label-caps text-xs text-hazard-orange tracking-widest font-semibold mt-0.5">איזור המרכז</span>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -81,7 +89,7 @@ import Countdown from "./Countdown.astro";
 		<Countdown />
 
 		<!-- Video Thumbnail / Feed -->
-		<div class="bg-surface-container/95 border border-outline-variant p-1.5 relative group mt-auto shadow-lg">
+		<div class="bg-surface-container/95 border border-outline-variant p-1.5 relative group mt-auto shadow-lg" dir="ltr">
 			<!-- Faux Tape Label -->
 			<div class="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-[#d2c9b5] text-surface px-4 py-0.5 z-20 border border-black/25 shadow-md rotate-1 flex items-center gap-2">
 				<div class="w-1.5 h-1.5 bg-red-600 rounded-full animate-ping"></div>

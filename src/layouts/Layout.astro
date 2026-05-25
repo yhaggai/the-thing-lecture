@@ -45,7 +45,7 @@ const {
 		<div class="fixed inset-0 pointer-events-none z-[100] scanline opacity-25"></div>
 
 		<!-- Top Navigation (Shared Component) - Desktop Only -->
-		<nav class="hidden md:flex justify-between items-center w-full px-margin-desktop py-4 max-w-container-max mx-auto bg-surface-container-lowest border-b border-outline-variant bg-opacity-90 backdrop-blur-md sticky top-0 z-50">
+		<nav dir="ltr" class="hidden md:flex justify-between items-center w-full px-margin-desktop py-4 max-w-container-max mx-auto bg-surface-container-lowest border-b border-outline-variant bg-opacity-90 backdrop-blur-md sticky top-0 z-50">
 			<div class="flex items-center gap-4">
 				<div class="w-8 h-8 border border-neon-blue rounded-full flex items-center justify-center relative glow-border overflow-hidden">
 					<canvas id="gc" class="w-full h-full block" width="64" height="64"></canvas>
@@ -72,7 +72,6 @@ const {
 				<div class="flex flex-col">
 					<span class="font-terminal-xs text-[8px] text-neon-blue">U.S. ANTARCTICA</span>
 					<span class="font-terminal-xs text-[8px] text-neon-blue">RESEARCH STATION 31</span>
-					<span class="font-terminal-xs text-[8px] text-on-surface-variant">WYOMING, U.S.A.</span>
 				</div>
 				<div class="flex items-center gap-1 ml-2">
 					<div class="w-1.5 h-1.5 rounded-full bg-terminal-green animate-pulse"></div>
@@ -85,7 +84,7 @@ const {
 		<slot />
 
 		<!-- Bottom Navigation (Mobile Only) -->
-		<nav class="docked full-width bottom-0 z-50 md:hidden bg-surface-container-lowest border-t border-outline-variant bg-opacity-95 backdrop-blur-lg fixed left-0 w-full flex justify-around items-center px-margin-mobile py-2 shadow-lg">
+		<nav dir="ltr" class="docked full-width bottom-0 z-50 md:hidden bg-surface-container-lowest border-t border-outline-variant bg-opacity-95 backdrop-blur-lg fixed left-0 w-full flex justify-around items-center px-margin-mobile py-2 shadow-lg">
 			<a class="flex flex-col items-center justify-center text-neon-blue bg-ghost-blue rounded-xl p-2 scale-90 transition-transform" href="#home">
 				<span class="material-symbols-outlined text-neon-blue text-xl" style="font-variation-settings: 'FILL' 1;">home</span>
 				<span class="font-label-caps text-[9px] mt-1">HOME</span>
@@ -105,7 +104,7 @@ const {
 		</nav>
 
 		<!-- Footer -->
-		<footer class="w-full bg-surface-container-lowest border-t border-outline-variant py-8 px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-gutter z-10 relative mt-12 mb-16 md:mb-0 max-w-container-max mx-auto">
+		<footer dir="ltr" class="w-full bg-surface-container-lowest border-t border-outline-variant py-8 px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-gutter z-10 relative mt-12 mb-16 md:mb-0 max-w-container-max mx-auto">
 			<div class="flex flex-col text-center md:text-left">
 				<span class="font-label-caps text-hazard-orange tracking-widest text-sm">OUTPOST 31 FILM SERIES</span>
 				<span class="font-terminal-xs text-[10px] text-on-surface-variant opacity-80 mt-1 uppercase">EXPLORING CINEMA BEYOND THE EDGE</span>
