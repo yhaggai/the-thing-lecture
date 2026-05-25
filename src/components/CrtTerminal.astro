@@ -1,0 +1,642 @@
+---
+---
+
+<div class="bg-surface-container/60 backdrop-blur-md border border-outline-variant p-6 relative hud-border w-full max-w-[800px] mx-auto my-8">
+  <!-- Corners for HUD styling -->
+  <div class="hud-corner-tl"></div>
+  <div class="hud-corner-tr"></div>
+  <div class="hud-corner-bl"></div>
+  <div class="hud-corner-br"></div>
+
+  <div class="flex justify-between items-center mb-6 border-b border-outline-variant/50 pb-3">
+    <div class="flex items-center gap-3">
+      <div class="w-2.5 h-2.5 bg-hazard-orange rounded-full animate-pulse shadow-[0_0_8px_#f59e0b]"></div>
+      <span class="font-terminal-xs text-sm text-neon-blue uppercase tracking-widest font-bold">U.S. OUTPOST #31 — MAINFRAME NODE 4</span>
+    </div>
+    <div class="flex gap-1.5 opacity-60">
+      <div class="w-1.5 h-3.5 bg-neon-blue transform skew-x-12"></div>
+      <div class="w-1.5 h-3.5 bg-neon-blue transform skew-x-12"></div>
+      <div class="w-1.5 h-3.5 bg-neon-blue transform skew-x-12"></div>
+    </div>
+  </div>
+
+  <div class="monitor-body mx-auto">
+    <div class="screen-bezel">
+      <div class="crt-screen" id="terminal-screen">
+        <div class="scanlines"></div>
+        <div class="phosphor-glow"></div>
+        <div class="screen-curve"></div>
+        <div class="flicker"></div>
+
+        <div class="crt-content" id="output-pane">
+          <div class="prompt-line bright font-bold">OUTPOST 31 MAINFRAME v4.81 — READY</div>
+          <div class="prompt-line separator">================================================</div>
+          <div class="prompt-line dim">SYS: INTEL 8086 OK &nbsp;&nbsp; STORAGE: 5.25" FLOPPY DRV A/B</div>
+          <div class="prompt-line dim">COMS: MCMURDO BASE — OFFLINE [ANTENNA STRUCTURAL FAILURE]</div>
+          <div class="prompt-line dim">LOCAL TEMP: -44°C &nbsp;&nbsp; WIND: 48 KNOTS &nbsp;&nbsp; BAROMETER: 981 HPA</div>
+          <div class="prompt-line separator" style="margin-bottom:12px;">================================================</div>
+          <div class="prompt-line dim">Type <span class="bright">HELP</span> to view list of active protocols.</div>
+          <div class="prompt-line" id="live-terminal-line" style="margin-top:8px;">
+            <span class="dim">A:\&gt;</span>&nbsp;<span class="cursor"></span>
+          </div>
+        </div>
+
+        <div class="input-row">
+          <span class="dim font-terminal-xs text-sm self-center">A:\&gt;</span>
+          <input class="crt-input" id="terminal-cmd" type="text" placeholder="enter protocol name..." autocomplete="off" spellcheck="false" />
+          <button class="crt-btn font-bold" id="exec-btn">EXEC</button>
+        </div>
+      </div>
+    </div>
+    <div class="monitor-label">⬤ &nbsp; CLASSIFIED OUTPOST DATA &nbsp; ⬤</div>
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+  .monitor-body {
+    background: #1e1b18;
+    border-radius: 24px;
+    padding: 24px 24px 40px;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.85), inset 0 2px 4px rgba(255,255,255,0.03);
+    width: 100%;
+    position: relative;
+    border: 1px solid #2d2620;
+  }
+
+  .monitor-body::after {
+    content: '';
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 64px;
+    height: 8px;
+    background: #110e0c;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.9);
+  }
+
+  .screen-bezel {
+    background: #0b0908;
+    border-radius: 12px;
+    padding: 8px;
+    border: 3px solid #171311;
+    box-shadow: inset 0 0 24px rgba(0,0,0,0.95);
+    overflow: hidden;
+  }
+
+  .crt-screen {
+    position: relative;
+    background: #000c02;
+    border-radius: 8px;
+    overflow: hidden;
+    min-height: 380px;
+    padding: 20px 24px;
+    font-family: 'Share Tech Mono', monospace;
+    color: #38bdf8; /* Default Blue matching Neon Blue of theme */
+    font-size: 14px;
+    line-height: 1.6;
+    transition: color 0.2s, background-color 0.2s;
+  }
+
+  .scanlines {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 3px,
+      rgba(0,0,0,0.3) 3px,
+      rgba(0,0,0,0.3) 4px
+    );
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .phosphor-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(38,101,253,0.08) 0%, rgba(0,0,0,0.45) 100%);
+    pointer-events: none;
+    z-index: 9;
+    transition: background 0.2s;
+  }
+
+  .screen-curve {
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+    box-shadow: inset 0 0 60px rgba(0,0,0,0.85), inset 3px 3px 15px rgba(0,0,0,0.6), inset -3px -3px 15px rgba(0,0,0,0.6);
+    pointer-events: none;
+    z-index: 11;
+  }
+
+  .flicker {
+    position: absolute;
+    inset: 0;
+    background: rgba(38,101,253,0.01);
+    pointer-events: none;
+    z-index: 12;
+    animation: crt-flicker 0.15s infinite;
+    transition: background-color 0.2s;
+  }
+
+  @keyframes crt-flicker {
+    0%   { opacity: 1; }
+    92%  { opacity: 1; }
+    93%  { opacity: 0.88; }
+    94%  { opacity: 1; }
+    96%  { opacity: 0.94; }
+    100% { opacity: 1; }
+  }
+
+  .crt-content {
+    position: relative;
+    z-index: 5;
+    text-shadow: 0 0 6px currentColor;
+    max-height: 280px;
+    overflow-y: auto;
+    margin-bottom: 16px;
+    scrollbar-width: none;
+  }
+  .crt-content::-webkit-scrollbar {
+    display: none;
+  }
+
+  .prompt-line {
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    margin-bottom: 2px;
+    animation: fade-in 0.2s ease;
+    word-break: break-all;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 15px;
+    background: currentColor;
+    box-shadow: 0 0 6px currentColor;
+    animation: cursor-blink 1s step-end infinite;
+    vertical-align: middle;
+  }
+
+  @keyframes cursor-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(1px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .dim { opacity: 0.7; }
+  .bright { filter: brightness(1.3); font-weight: bold; }
+  .warn { color: #f59e0b !important; }
+  .danger { color: #ef4444 !important; }
+  .success { color: #10b981 !important; }
+
+  .input-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    align-items: stretch;
+    position: relative;
+    z-index: 15;
+  }
+
+  .crt-input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.6) !important;
+    border: 1px solid currentColor !important;
+    border-radius: 4px !important;
+    color: inherit !important;
+    font-family: 'Share Tech Mono', monospace !important;
+    font-size: 14px !important;
+    padding: 6px 12px !important;
+    caret-color: transparent;
+    outline: none !important;
+    text-shadow: 0 0 4px currentColor;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.5) !important;
+  }
+
+  .crt-btn {
+    background: rgba(0, 0, 0, 0.4) !important;
+    border: 1px solid currentColor !important;
+    border-radius: 4px !important;
+    color: inherit !important;
+    font-family: 'Share Tech Mono', monospace !important;
+    font-size: 13px !important;
+    padding: 6px 16px !important;
+    cursor: pointer;
+    text-shadow: 0 0 4px currentColor;
+    transition: background 0.1s, box-shadow 0.1s;
+  }
+
+  .crt-btn:hover {
+    background: rgba(255,255,255,0.08) !important;
+    box-shadow: 0 0 8px rgba(255,255,255,0.15) !important;
+  }
+
+  .separator {
+    opacity: 0.3;
+    margin: 4px 0;
+  }
+
+  .monitor-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: #4b453d;
+    text-align: center;
+    margin-top: 14px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+  }
+</style>
+
+<script>
+  // Web Audio Synth for retro sound effects
+  class AudioSynth {
+    ctx: AudioContext | null = null;
+    clickBuffers: AudioBuffer[] = [];
+    isLoading = false;
+
+    async init() {
+      if (this.ctx) return;
+      
+      this.ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      
+      if (this.isLoading) return;
+      this.isLoading = true;
+      
+      // Take 10 high-quality mechanical click WAV files
+      const clickUrls = [
+        '/clicks/click_001.wav',
+        '/clicks/click_002.wav',
+        '/clicks/click_003.wav',
+        '/clicks/click_004.wav',
+        '/clicks/click_005.wav',
+        '/clicks/click_006.wav',
+        '/clicks/click_007.wav',
+        '/clicks/click_008.wav',
+        '/clicks/click_009.wav',
+        '/clicks/click_010.wav'
+      ];
+      
+      const loadPromises = clickUrls.map(async (url) => {
+        try {
+          const response = await fetch(url);
+          const arrayBuffer = await response.arrayBuffer();
+          if (this.ctx) {
+            const audioBuffer = await this.ctx.decodeAudioData(arrayBuffer);
+            this.clickBuffers.push(audioBuffer);
+          }
+        } catch (e) {
+          console.error("Failed to load mechanical key click sound:", url, e);
+        }
+      });
+      
+      await Promise.all(loadPromises);
+    }
+
+    playSynthKey() {
+      if (!this.ctx) return;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(140 + Math.random() * 60, this.ctx.currentTime);
+      
+      gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.04);
+      
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.04);
+    }
+
+    async playKey() {
+      await this.init();
+      if (!this.ctx) return;
+      
+      if (this.clickBuffers.length > 0) {
+        const randBuffer = this.clickBuffers[Math.floor(Math.random() * this.clickBuffers.length)];
+        const source = this.ctx.createBufferSource();
+        source.buffer = randBuffer;
+        
+        // organic mechanical pitch variation
+        source.playbackRate.setValueAtTime(0.9 + Math.random() * 0.2, this.ctx.currentTime);
+        
+        const gain = this.ctx.createGain();
+        gain.gain.setValueAtTime(0.35, this.ctx.currentTime);
+        
+        source.connect(gain);
+        gain.connect(this.ctx.destination);
+        source.start();
+      } else {
+        this.playSynthKey();
+      }
+    }
+
+    playBeep(freq = 880, duration = 0.1) {
+      this.init();
+      if (!this.ctx) return;
+      
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+      
+      gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+      
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + duration);
+    }
+
+    playSweep() {
+      this.init();
+      if (!this.ctx) return;
+      
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(100, this.ctx.currentTime);
+      osc.frequency.linearRampToValueAtTime(1200, this.ctx.currentTime + 0.8);
+      
+      gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.8);
+      
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.8);
+    }
+  }
+
+  const audio = new AudioSynth();
+
+  const themes = [
+    { name: 'NEON BLUE', fg: '#38bdf8', tint: 'rgba(38,101,253,0.08)', bg: '#000c1c', flicker: 'rgba(38,101,253,0.01)' },
+    { name: 'AMBER PHOSPHOR', fg: '#fbbf24', tint: 'rgba(251,191,36,0.08)', bg: '#100a00', flicker: 'rgba(251,191,36,0.01)' },
+    { name: 'GREEN RETRO', fg: '#22c55e', tint: 'rgba(34,197,94,0.08)', bg: '#000d02', flicker: 'rgba(34,197,94,0.01)' },
+    { name: 'CYAN DECRYPT', fg: '#06b6d4', tint: 'rgba(6,182,212,0.08)', bg: '#000f12', flicker: 'rgba(6,182,212,0.01)' }
+  ];
+  let currentThemeIdx = 0;
+
+  function cycleColor() {
+    currentThemeIdx = (currentThemeIdx + 1) % themes.length;
+    const t = themes[currentThemeIdx];
+    const screen = document.getElementById('terminal-screen');
+    const glow = screen?.querySelector('.phosphor-glow') as HTMLElement;
+    const flicker = screen?.querySelector('.flicker') as HTMLElement;
+    
+    if (screen) screen.style.color = t.fg;
+    if (screen) screen.style.backgroundColor = t.bg;
+    if (glow) glow.style.background = `radial-gradient(ellipse at center, ${t.tint} 0%, rgba(0,0,0,0.45) 100%)`;
+    if (flicker) flicker.style.backgroundColor = t.flicker;
+    
+    return `THEME UPDATED TO: ${t.name}`;
+  }
+
+  const logs: Record<string, string[]> = {
+    'blair.log': [
+      "DATE: 1982-11-12",
+      "ANALYSIS: NORWEGIAN SPECIMEN IS NOT AN INDIVIDUAL ORGANISM.",
+      "IMMEDIATE CONCLUSION: IT IMITATES OTHER LIFE FORMS WITH 100% FIDELITY.",
+      "WARNING: ASSIMILATION RATE IS EXPONENTIAL. IF IT REACHES CIVILIZATION,",
+      "TOTAL WORLD ASSIMILATION WILL OCCUR IN 27,000 HOURS FROM FIRST CONTACT.",
+      "THE OTHERS DO NOT REALIZE THIS. I HAVE DISRUPT- SABOTAGED THE HELICOPTER."
+    ],
+    'malki.log': [
+      "DATE: 1982-11-14",
+      "ATTN: ALL PERSONNEL. THE RADIO IS COMPLETELY SILENT.",
+      "MCMURDO STATION DOES NOT RESPOND TO HIGH FREQUENCY BEACONS.",
+      "DOGS IN THE KENNEL HAVE BEEN CRYING ALL NIGHT. EXTREME CAUTION IS ADVISED.",
+      "LOCK YOUR QUARTERS. TRUST NO ONE."
+    ]
+  };
+
+  const rosters = [
+    "CREW BIO-STATUS ANALYSIS LOG:",
+    "--------------------------------------",
+    "J.R. MACREADY   - STATUS: [CLEAR] - HIGH SYSTEM VIGILANCE",
+    "DR. BLAIR       - STATUS: [CONFINED] - BIO-ANOMALY DETECTED",
+    "CHILDS          - STATUS: [CLEAR] - STATION SECOND-IN-COMMAND",
+    "PALMER          - STATUS: [SUSPICIOUS] - IRREGULAR CELLULAR TEMPLATE",
+    "NORRIS          - STATUS: [INFECTED] - MASSIVE ASSIMILATION CONFIRMED",
+    "DR. COPELAND    - STATUS: [CLEAR] - ARCHIVAL PROTOCOL IN PROGRESS",
+    "--------------------------------------",
+    "USE 'BLOODTEST [NAME]' PROTOCOL FOR LIVE ASSIMILATION PROBABILITY SCANS."
+  ];
+
+  const helpList = [
+    "================================================",
+    "AWAITING DECRYPT KEY... SUPPORTED TERMINAL CODEWORDS:",
+    "  HELP       - List available operational codes",
+    "  DIAGNOSTIC - Execute station utility check",
+    "  ROSTER     - Scan personnel biology registry",
+    "  BLOODTEST  - E.g. 'BLOODTEST PALMER'. Analyze target organism",
+    "  LOGS       - Scan classified data logs",
+    "  READ       - Read specific file, e.g., 'READ BLAIR.LOG'",
+    "  RSVP       - E.g. 'RSVP J.R. MACREADY'. Register for screening",
+    "  COLOR      - Cycle Phosphor color themes",
+    "  CLEAR      - Purge screen terminal memory",
+    "================================================"
+  ];
+
+  const commandInput = document.getElementById('terminal-cmd') as HTMLInputElement;
+  const execButton = document.getElementById('exec-btn');
+  const outputPane = document.getElementById('output-pane');
+  const liveLine = document.getElementById('live-terminal-line');
+
+  function addOutputLines(lines: string[]) {
+    if (!outputPane || !liveLine) return;
+    
+    lines.forEach(lineText => {
+      const lineDiv = document.createElement('div');
+      lineDiv.className = 'prompt-line';
+      
+      // Basic highlight logic
+      if (lineText.includes('CLEAR') || lineText.includes('OK') || lineText.includes('GRANTED')) {
+        lineDiv.classList.add('success');
+      } else if (lineText.includes('INFECTED') || lineText.includes('ASSIMILATION') || lineText.includes('WARNING') || lineText.includes('FAILURE')) {
+        lineDiv.classList.add('danger');
+      } else if (lineText.includes('SUSPICIOUS') || lineText.includes('CONFINED')) {
+        lineDiv.classList.add('warn');
+      }
+      
+      lineDiv.innerHTML = lineText;
+      outputPane.insertBefore(lineDiv, liveLine);
+    });
+    
+    // Auto-scroll
+    outputPane.scrollTop = outputPane.scrollHeight;
+  }
+
+  function processCommand() {
+    if (!commandInput || !liveLine || !outputPane) return;
+    const fullVal = commandInput.value.trim();
+    if (!fullVal) return;
+
+    // Play button execute beep
+    audio.playBeep(650, 0.08);
+
+    const parts = fullVal.split(' ');
+    const cmd = parts[0].toUpperCase();
+    const arg = parts.slice(1).join(' ');
+
+    // Echo input onto terminal screen
+    const echoDiv = document.createElement('div');
+    echoDiv.className = 'prompt-line';
+    echoDiv.innerHTML = `<span class="dim">A:\&gt;</span>&nbsp;${fullVal}`;
+    outputPane.insertBefore(echoDiv, liveLine);
+
+    if (cmd === 'CLEAR') {
+      const allLines = outputPane.querySelectorAll('.prompt-line:not(#live-terminal-line)');
+      allLines.forEach(l => l.remove());
+    } else if (cmd === 'HELP') {
+      addOutputLines(helpList);
+    } else if (cmd === 'COLOR') {
+      const themeMsg = cycleColor();
+      addOutputLines([themeMsg]);
+    } else if (cmd === 'DIAGNOSTIC' || cmd === 'SYSTEM') {
+      addOutputLines([
+        "PERFORMING FULL SUB-ICE UTILITY SCANS...",
+        "GENERATOR CAPACITY : 84% [STABLE]",
+        "STATION STRUCT TEMP: -44°C (EXTREME CHILL)",
+        "OUTSIDE VENTILATION: BLOCKED BY COMPACT SNOW DRIFT",
+        "COMS ARRAY STATUS  : DISCONNECTED. MCMURDO UNREACHABLE.",
+        "THREAT METRIC      : HIGH CELLULAR THREAT DETECTED ON STATION PREMISES."
+      ]);
+    } else if (cmd === 'ROSTER') {
+      addOutputLines(rosters);
+    } else if (cmd === 'BLOODTEST') {
+      if (!arg) {
+        addOutputLines(["ERROR: PROTOCOL REQUIRES ARGUMENT: 'BLOODTEST [SUBJECT]'", "EXAMPLE: 'BLOODTEST PALMER'"]);
+      } else {
+        const subject = arg.toUpperCase();
+        addOutputLines([`INITIATING CELLULAR SCREENING SPECTRAL SCAN FOR SUBJECT: ${subject}`]);
+        audio.playSweep();
+        
+        setTimeout(() => {
+          if (subject.includes('PALMER') || subject.includes('NORRIS')) {
+            audio.playBeep(250, 0.4);
+            addOutputLines([
+              "------------------------------------------------",
+              `ALERT! BIO-SPECIMEN ANALYZER DETECTED INCONGRUENCY.`,
+              `SUBJECT: ${subject}`,
+              "ASSIMILATION PROBABILITY: [ 99.98% ]",
+              "REACTION METRIC: MASSIVE FLAMMABLE ANOMALY DETECTED IN PETRI DISH.",
+              "CLASSIFICATION: [ INFECTED ] — ENGAGE DEFENSIVE FLAMETHROWER TACTICS NOW.",
+              "------------------------------------------------"
+            ]);
+          } else if (subject.includes('MACREADY') || subject.includes('CHILDS') || subject.includes('COPELAND')) {
+            audio.playBeep(1100, 0.15);
+            addOutputLines([
+              "------------------------------------------------",
+              `SUBJECT: ${subject}`,
+              "ASSIMILATION PROBABILITY: [ 0.04% ]",
+              "REACTION METRIC: PURE CELLULAR ADHERENCE. NO REACTION TO SECURED COPPER WIRE HEAT TEST.",
+              "CLASSIFICATION: [ CLEAR ]",
+              "------------------------------------------------"
+            ]);
+          } else {
+            // Random output for custom entries
+            const infected = Math.random() > 0.5;
+            if (infected) {
+              audio.playBeep(250, 0.4);
+              addOutputLines([
+                "------------------------------------------------",
+                `SUBJECT: ${subject}`,
+                "ASSIMILATION PROBABILITY: [ 87.4% ]",
+                "REACTION METRIC: PARTIAL ASSIMILATION DETECTED.",
+                "CLASSIFICATION: [ INFECTED ]",
+                "------------------------------------------------"
+              ]);
+            } else {
+              audio.playBeep(980, 0.12);
+              addOutputLines([
+                "------------------------------------------------",
+                `SUBJECT: ${subject}`,
+                "ASSIMILATION PROBABILITY: [ 1.12% ]",
+                "REACTION METRIC: CELLULAR INTEGRITY SATISFACTORY.",
+                "CLASSIFICATION: [ CLEAR ]",
+                "------------------------------------------------"
+              ]);
+            }
+          }
+        }, 800);
+      }
+    } else if (cmd === 'LOGS') {
+      addOutputLines([
+        "CLASSIFIED INTERNAL STATION MEMORY SYSTEM SECURE:",
+        "------------------------------------------------",
+        "  BLAIR.LOG     - CELLULAR ANOMALY STUDY NOTES (1982-11-12)",
+        "  MALKI.LOG     - METEOROLOGICAL & COMS BLACKOUT LOG (1982-11-14)",
+        "------------------------------------------------",
+        "USE 'READ [LOGNAME]' TO DECRYPT AN INDIVIDUAL FILE PACK."
+      ]);
+    } else if (cmd === 'READ') {
+      const fileLower = arg.toLowerCase();
+      if (!arg) {
+        addOutputLines(["ERROR: FILE IDENTIFIER BLANK. E.G., 'READ BLAIR.LOG'"]);
+      } else if (logs[fileLower]) {
+        addOutputLines([`DECRYPTING RESOURCE: ${arg.toUpperCase()}...`, ...logs[fileLower]]);
+      } else {
+        addOutputLines([`FILE ERROR: NOT FOUND UNREADABLE: ${arg.toUpperCase()}`]);
+      }
+    } else if (cmd === 'RSVP') {
+      if (!arg) {
+        addOutputLines(["ERROR: ENTER YOUR NAME. PROTOCOL: 'RSVP [YOUR NAME]'", "EXAMPLE: 'RSVP R.J. MACREADY'"]);
+      } else {
+        const attendee = arg.toUpperCase();
+        audio.playBeep(1200, 0.2);
+        setTimeout(() => {
+          audio.playBeep(1400, 0.2);
+        }, 120);
+        
+        const badgeCode = 'OUTPOST31-' + Math.floor(100000 + Math.random() * 900000);
+        addOutputLines([
+          "------------------------------------------------",
+          "SYSTEM STATUS: ACCESS TICKET GRANTED",
+          `HOLDER: ${attendee}`,
+          `REGISTRY ID: ${badgeCode}`,
+          "EVENT: THE THING SCREENING & SPECIALLY DECLASSIFIED LECTURE",
+          "DATE: JUNE 20, 2026 @ 19:30 HOURS",
+          "FACILITY CODE: OUTPOST 31 COMMUNION SHELTER",
+          "------------------------------------------------"
+        ]);
+      }
+    } else {
+      addOutputLines([`COMMAND/PROTOCOL NOT SUPPORTED: '${cmd}'`]);
+    }
+
+    commandInput.value = '';
+    commandInput.focus();
+  }
+
+  // Key sound and listeners
+  commandInput?.addEventListener('input', () => {
+    audio.playKey();
+  });
+
+  commandInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      processCommand();
+    }
+  });
+
+  execButton?.addEventListener('click', () => {
+    processCommand();
+  });
+</script>

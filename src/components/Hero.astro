@@ -4,7 +4,7 @@ import Countdown from "./Countdown.astro";
 
 <section id="home" class="grid grid-cols-1 lg:grid-cols-12 gap-gutter min-h-[600px] relative">
 	<!-- Hero Background Image (Spans Full Width behind content) -->
-	<div class="absolute inset-0 z-0 border border-outline-variant/30 glow-border rounded overflow-hidden">
+	<div class="absolute inset-0 border border-outline-variant/30 glow-border rounded overflow-hidden" style="z-index: -2;">
 		<img 
 			alt="Outpost 31 snowy arctic blizzard cinematic backdrop" 
 			class="w-full h-full object-cover opacity-60 crt-flicker mix-blend-screen" 
@@ -14,8 +14,10 @@ import Countdown from "./Countdown.astro";
 		<div class="absolute inset-0 bg-gradient-to-r from-surface via-surface/85 to-transparent"></div>
 		<div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent"></div>
 	</div>
-	<!-- Blizzard Snowstorm Effect (transparent background) -->
-	<canvas id="snowCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
+	<!-- Blizzard Snowstorm Background Layer (smaller particles, low z-index) -->
+	<canvas id="snowCanvasBg" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:-1;"></canvas>
+	<!-- Blizzard Snowstorm Foreground Layer (bigger particles, high z-index) -->
+	<canvas id="snowCanvasFg" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
 
 	<!-- Left Content: Title & Info -->
 	<div class="lg:col-span-7 z-10 flex flex-col justify-center p-6 md:p-8">
@@ -86,14 +88,25 @@ import Countdown from "./Countdown.astro";
 				<span class="font-[Courier] text-xs font-black uppercase tracking-widest text-black/90">CHECK CHNL. 31</span>
 			</div>
 			
-			<div class="relative overflow-hidden border border-black h-[200px] bg-black">
-				<img 
-					alt="Outpost 31 Security Feed surveillance feed mockup" 
-					class="w-full h-full object-cover filter grayscale sepia-[0.1] contrast-[1.1] brightness-[0.75] group-hover:scale-105 transition-transform duration-700" 
-					src="/images/surveillance.jpg"
-				/>
-				<div class="absolute inset-0 bg-neon-blue/10 mix-blend-color pointer-events-none crt-flicker"></div>
-				<div class="absolute inset-0 scanline opacity-40 pointer-events-none"></div>
+			<div class="relative overflow-hidden border border-black h-[200px] bg-black crt-screen">
+				<div class="absolute inset-0 overflow-hidden transition-transform duration-700 group-hover:scale-[1.02]">
+					<div class="crt-lowres-feed">
+					<video
+						class="crt-surveillance-feed"
+						src="/Static_surveillance_camera_foo.mp4"
+						autoplay
+						muted
+						loop
+						playsinline
+						aria-label="Outpost 31 Security Feed surveillance feed"
+					></video>
+					</div>
+				</div>
+				<div class="absolute inset-0 crt-phosphor pointer-events-none crt-flicker"></div>
+				<div class="absolute inset-0 scanline opacity-50 pointer-events-none"></div>
+				<div class="absolute inset-0 crt-vignette pointer-events-none"></div>
+				<div class="absolute inset-0 crt-rgb-shift pointer-events-none"></div>
+				<div class="absolute inset-0 crt-vhs-noise pointer-events-none"></div>
 				
 				<!-- Overlay UI indicators -->
 				<div class="absolute bottom-2 left-3 right-3 flex justify-between items-center text-white/80 border-b border-white/20 pb-1 font-terminal-xs text-[9px] tracking-widest select-none pointer-events-none">
@@ -120,10 +133,10 @@ import Countdown from "./Countdown.astro";
 				<div class="flex items-center justify-center px-2 border-r border-outline-variant text-hazard-orange">
 					<span class="material-symbols-outlined text-[14px]">science</span>
 				</div>
-				<div class="flex-grow flex items-center px-2 bg-hazard-orange/10 overflow-hidden">
-					<div class="w-full flex items-center">
-						<span class="font-terminal-xs text-[9px] text-hazard-orange mr-2 font-bold shrink-0">WARNING:</span>
-						<span class="font-terminal-xs text-[9px] text-on-surface-variant tracking-wider uppercase whitespace-nowrap animate-[marquee_15s_linear_infinite]">
+				<div class="flex-grow flex items-center min-w-0 bg-hazard-orange/10 overflow-hidden">
+					<span class="font-terminal-xs text-[9px] text-hazard-orange pl-2 pr-1 font-bold shrink-0 z-10 bg-hazard-orange/10">WARNING:</span>
+					<div class="flex-1 min-w-0 overflow-hidden">
+						<span class="font-terminal-xs text-[9px] text-on-surface-variant tracking-wider uppercase whitespace-nowrap inline-block animate-[marquee_15s_linear_infinite]">
 							INFECTION LEVEL UNRESOLVED --- LOCKDOWN LEVEL-03 ENGAGED --- AVOID DIRECT CONTACT
 						</span>
 					</div>
@@ -143,17 +156,26 @@ import Countdown from "./Countdown.astro";
 		});
 	}
 
-	// Blizzard Snowstorm Effect (transparent background)
+	// Blizzard Snowstorm Effect (2 layers: Background and Foreground)
 	(function(){
-		const canvas = document.getElementById('snowCanvas') as HTMLCanvasElement | null;
-		if (!canvas) return;
-		const ctx = canvas.getContext('2d');
-		if (!ctx) return;
+		const canvasBg = document.getElementById('snowCanvasBg') as HTMLCanvasElement | null;
+		const canvasFg = document.getElementById('snowCanvasFg') as HTMLCanvasElement | null;
+		if (!canvasBg || !canvasFg) return;
+		
+		const ctxBg = canvasBg.getContext('2d');
+		const ctxFg = canvasFg.getContext('2d');
+		if (!ctxBg || !ctxFg) return;
 		
 		let currentWind = 8;
 		let targetWind = 8;
-		let activeCount = 300;
-		const MAX_COUNT = 600;
+		
+		// Background (small, slow, subtle, dense)
+		let activeCountBg = 350;
+		const MAX_COUNT_BG = 600;
+		
+		// Foreground (large, fast, prominent, sparse)
+		let activeCountFg = 100;
+		const MAX_COUNT_FG = 250;
 
 		interface Flake {
 			x: number;
@@ -165,69 +187,118 @@ import Countdown from "./Countdown.astro";
 			opacity: number;
 			layer: number;
 		}
-		let flakes: Flake[] = [];
+		
+		let flakesBg: Flake[] = [];
+		let flakesFg: Flake[] = [];
+		
 		function resize(){ 
-			if (canvas) {
-				canvas.width = window.innerWidth; 
-				canvas.height = window.innerHeight; 
+			if (canvasBg && canvasFg) {
+				canvasBg.width = window.innerWidth; 
+				canvasBg.height = window.innerHeight; 
+				canvasFg.width = window.innerWidth; 
+				canvasFg.height = window.innerHeight; 
 			}
 		}
 		resize(); 
 		window.addEventListener('resize', resize);
-		function rnd(): Flake { 
+		
+		function rndBg(): Flake { 
 			return { 
-				x: Math.random()*(canvas?.width || window.innerWidth), 
-				y: Math.random()*(canvas?.height || window.innerHeight) - (canvas?.height || window.innerHeight), 
-				r: Math.random()*2.8+0.5, 
-				speed: Math.random()*2.5+1.2, 
-				wobble: Math.random()*Math.PI*2, 
-				wobbleSpeed:(Math.random()-0.5)*0.04, 
-				opacity:Math.random()*0.7+0.3, 
-				layer:Math.random() 
+				x: Math.random() * (canvasBg?.width || window.innerWidth), 
+				y: Math.random() * (canvasBg?.height || window.innerHeight) - (canvasBg?.height || window.innerHeight), 
+				r: Math.random() * 1.2 + 0.4, 
+				speed: Math.random() * 1.5 + 0.6, 
+				wobble: Math.random() * Math.PI * 2, 
+				wobbleSpeed: (Math.random() - 0.5) * 0.03, 
+				opacity: Math.random() * 0.5 + 0.2, 
+				layer: Math.random() 
 			}; 
 		}
-		// Allocate maximum flakes capacity
-		for(let i=0;i<MAX_COUNT;i++){ 
-			const f=rnd(); 
-			f.y=Math.random()*(canvas?.height || window.innerHeight); 
-			flakes.push(f); 
+		
+		function rndFg(): Flake { 
+			return { 
+				x: Math.random() * (canvasFg?.width || window.innerWidth), 
+				y: Math.random() * (canvasFg?.height || window.innerHeight) - (canvasFg?.height || window.innerHeight), 
+				r: Math.random() * 2.5 + 1.8, 
+				speed: Math.random() * 3.0 + 1.8, 
+				wobble: Math.random() * Math.PI * 2, 
+				wobbleSpeed: (Math.random() - 0.5) * 0.05, 
+				opacity: Math.random() * 0.5 + 0.4, 
+				layer: Math.random() 
+			}; 
+		}
+		
+		// Initialize flakes
+		for(let i=0; i<MAX_COUNT_BG; i++){ 
+			const f = rndBg(); 
+			f.y = Math.random() * (canvasBg?.height || window.innerHeight); 
+			flakesBg.push(f); 
+		}
+		for(let i=0; i<MAX_COUNT_FG; i++){ 
+			const f = rndFg(); 
+			f.y = Math.random() * (canvasFg?.height || window.innerHeight); 
+			flakesFg.push(f); 
 		}
 
 		// Randomize storm intensity values every 10 seconds
 		setInterval(() => {
 			targetWind = Math.random() * 20 - 8; // Range: -8 (heavy left gust) to 12 (heavy right gust)
-			activeCount = Math.floor(Math.random() * 350 + 150); // Range: 150 to 500 active particles
+			activeCountBg = Math.floor(Math.random() * 300 + 200); // 200 to 500 active particles
+			activeCountFg = Math.floor(Math.random() * 100 + 60);  // 60 to 160 active particles
 		}, 10000);
 
 		function draw(){
-			if (!canvas || !ctx) return;
-			ctx.clearRect(0,0,canvas.width,canvas.height);
+			if (!canvasBg || !canvasFg || !ctxBg || !ctxFg) return;
+			ctxBg.clearRect(0, 0, canvasBg.width, canvasBg.height);
+			ctxFg.clearRect(0, 0, canvasFg.width, canvasFg.height);
 			
 			// Smoothly interpolate wind gusts
 			currentWind += (targetWind - currentWind) * 0.02;
 
-			// Slice to current active count for dynamic density adjustments
-			const activeFlakes = flakes.slice(0, activeCount);
-
-			activeFlakes.forEach(f=>{
-				const d=0.5+f.layer*0.5; 
-				f.wobble+=f.wobbleSpeed; 
-				f.x+=currentWind*d+Math.sin(f.wobble)*0.8*d; 
-				f.y+=f.speed*d+Math.abs(currentWind)*0.18;
-				if(f.y>canvas.height+10){
-					f.y=-10;
-					f.x=Math.random()*canvas.width;
+			// Draw Background Snow (low z-index)
+			const activeBg = flakesBg.slice(0, activeCountBg);
+			activeBg.forEach(f => {
+				const d = 0.5 + f.layer * 0.5; 
+				f.wobble += f.wobbleSpeed; 
+				f.x += currentWind * d + Math.sin(f.wobble) * 0.8 * d; 
+				f.y += f.speed * d + Math.abs(currentWind) * 0.15;
+				if(f.y > canvasBg.height + 10){
+					f.y = -10;
+					f.x = Math.random() * canvasBg.width;
 				}
-				if(f.x>canvas.width+20) f.x=-10; 
-				if(f.x<-20) f.x=canvas.width+10;
-				const b=200+Math.floor(f.layer*55);
-				ctx.globalAlpha=f.opacity*d; 
-				ctx.beginPath(); 
-				ctx.arc(f.x,f.y,f.r*d,0,Math.PI*2); 
-				ctx.fillStyle=`rgb(${b},${b},255)`; 
-				ctx.fill(); 
-				ctx.globalAlpha=1;
+				if(f.x > canvasBg.width + 20) f.x = -10; 
+				if(f.x < -20) f.x = canvasBg.width + 10;
+				const b = 210 + Math.floor(f.layer * 45);
+				ctxBg.globalAlpha = f.opacity * d; 
+				ctxBg.beginPath(); 
+				ctxBg.arc(f.x, f.y, f.r * d, 0, Math.PI * 2); 
+				ctxBg.fillStyle = `rgb(${b},${b},255)`; 
+				ctxBg.fill(); 
+				ctxBg.globalAlpha = 1;
 			});
+
+			// Draw Foreground Snow (high z-index)
+			const activeFg = flakesFg.slice(0, activeCountFg);
+			activeFg.forEach(f => {
+				const d = 0.5 + f.layer * 0.5; 
+				f.wobble += f.wobbleSpeed; 
+				f.x += currentWind * d + Math.sin(f.wobble) * 0.8 * d; 
+				f.y += f.speed * d + Math.abs(currentWind) * 0.22;
+				if(f.y > canvasFg.height + 10){
+					f.y = -10;
+					f.x = Math.random() * canvasFg.width;
+				}
+				if(f.x > canvasFg.width + 20) f.x = -10; 
+				if(f.x < -20) f.x = canvasFg.width + 10;
+				const b = 230 + Math.floor(f.layer * 25);
+				ctxFg.globalAlpha = f.opacity * d; 
+				ctxFg.beginPath(); 
+				ctxFg.arc(f.x, f.y, f.r * d, 0, Math.PI * 2); 
+				ctxFg.fillStyle = `rgb(${b},${b},255)`; 
+				ctxFg.fill(); 
+				ctxFg.globalAlpha = 1;
+			});
+
 			requestAnimationFrame(draw);
 		}
 		draw();

@@ -94,6 +94,57 @@
     100% { opacity: 0.98; }
 }
 
+/* Surveillance CRT monitor */
+.crt-screen {
+    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
+}
+
+/* Render at half size, scale up = chunky 80s low-res */
+.crt-lowres-feed {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    transform: scale(0.5);
+    transform-origin: top left;
+}
+
+.crt-surveillance-feed {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    filter: blur(1.5px) grayscale(1) sepia(0.4) contrast(1.45) brightness(0.6) saturate(0.35) hue-rotate(72deg);
+}
+
+.crt-vhs-noise {
+    opacity: 0.12;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 128px 128px;
+    mix-blend-mode: overlay;
+    animation: vhs-noise 0.12s steps(2) infinite;
+}
+
+@keyframes vhs-noise {
+    0% { transform: translate(0, 0); }
+    50% { transform: translate(-2%, 1%); }
+    100% { transform: translate(1%, -1%); }
+}
+
+.crt-phosphor {
+    background: radial-gradient(ellipse at center, rgba(80, 255, 120, 0.08) 0%, transparent 70%);
+    mix-blend-mode: screen;
+}
+
+.crt-vignette {
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+.crt-rgb-shift {
+    background: linear-gradient(90deg, rgba(255, 0, 0, 0.03) 0%, transparent 2%, transparent 98%, rgba(0, 255, 255, 0.03) 100%);
+    mix-blend-mode: screen;
+}
+
 .glow-border {
     box-shadow: inset 0 0 10px rgba(38, 101, 253, 0.2);
 }
@@ -118,3 +169,15 @@
 .hud-corner-tr { position: absolute; top: 0; right: 0; width: 10px; height: 10px; border-top: 2px solid #2665fd; border-right: 2px solid #2665fd; }
 .hud-corner-bl { position: absolute; bottom: 0; left: 0; width: 10px; height: 10px; border-bottom: 2px solid #2665fd; border-left: 2px solid #2665fd; }
 .hud-corner-br { position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; border-bottom: 2px solid #2665fd; border-right: 2px solid #2665fd; }
+
+/* Immersive Neon Glow and Hover Animation for Icons */
+.material-symbols-outlined {
+    display: inline-block;
+    vertical-align: middle;
+    transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(0 0 2px currentColor);
+}
+
+.material-symbols-outlined:hover {
+    filter: drop-shadow(0 0 10px currentColor);
+}

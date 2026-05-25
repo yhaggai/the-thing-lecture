@@ -1,0 +1,325 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+  .crt-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background: transparent;
+  }
+
+  .monitor-body {
+    background: #2a2520;
+    border-radius: 28px;
+    padding: 28px 32px 48px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.7), inset 0 2px 4px rgba(255,255,255,0.05);
+    width: 100%;
+    max-width: 620px;
+    position: relative;
+  }
+
+  .monitor-body::after {
+    content: '';
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 8px;
+    background: #1a1714;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.8);
+  }
+
+  .screen-bezel {
+    background: #111;
+    border-radius: 12px;
+    padding: 6px;
+    border: 3px solid #1c1815;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.9);
+    overflow: hidden;
+  }
+
+  .crt-screen {
+    position: relative;
+    background: #000d00;
+    border-radius: 8px;
+    overflow: hidden;
+    min-height: 340px;
+    padding: 24px 28px;
+    font-family: 'Share Tech Mono', monospace;
+    color: #00ff41;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .scanlines {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 3px,
+      rgba(0,0,0,0.35) 3px,
+      rgba(0,0,0,0.35) 4px
+    );
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .phosphor-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(0,80,0,0.08) 0%, rgba(0,0,0,0.4) 100%);
+    pointer-events: none;
+    z-index: 9;
+  }
+
+  .screen-curve {
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+    box-shadow: inset 0 0 80px rgba(0,0,0,0.6), inset 4px 4px 20px rgba(0,0,0,0.5), inset -4px -4px 20px rgba(0,0,0,0.5);
+    pointer-events: none;
+    z-index: 11;
+  }
+
+  .flicker {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,255,65,0.015);
+    pointer-events: none;
+    z-index: 12;
+    animation: flicker 0.15s infinite;
+  }
+
+  @keyframes flicker {
+    0%   { opacity: 1; }
+    92%  { opacity: 1; }
+    93%  { opacity: 0.85; }
+    94%  { opacity: 1; }
+    96%  { opacity: 0.92; }
+    100% { opacity: 1; }
+  }
+
+  .crt-content {
+    position: relative;
+    z-index: 5;
+    text-shadow: 0 0 8px #00ff41, 0 0 20px rgba(0,255,65,0.4);
+  }
+
+  .prompt-line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+    animation: fadein 0.3s ease;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 9px;
+    height: 16px;
+    background: #00ff41;
+    box-shadow: 0 0 8px #00ff41;
+    animation: blink 1.1s step-end infinite;
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  @keyframes fadein {
+    from { opacity: 0; transform: translateY(2px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .dim { color: #00a028; text-shadow: 0 0 4px #00a028; }
+  .bright { color: #7fffb2; text-shadow: 0 0 10px #7fffb2, 0 0 22px rgba(0,255,65,0.5); }
+  .warn { color: #f0c000; text-shadow: 0 0 8px #f0c000; }
+
+  .input-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+    align-items: stretch;
+  }
+
+  .crt-input {
+    flex: 1;
+    background: #000d00 !important;
+    border: 1px solid #00a028 !important;
+    border-radius: 4px !important;
+    color: #00ff41 !important;
+    font-family: 'Share Tech Mono', monospace !important;
+    font-size: 13px !important;
+    padding: 8px 12px !important;
+    caret-color: #00ff41;
+    outline: none !important;
+    text-shadow: 0 0 6px #00ff41;
+    box-shadow: inset 0 0 12px rgba(0,255,65,0.05), 0 0 0 0px !important;
+  }
+
+  .crt-input:focus {
+    border-color: #00ff41 !important;
+    box-shadow: inset 0 0 12px rgba(0,255,65,0.08), 0 0 8px rgba(0,255,65,0.2) !important;
+  }
+
+  .crt-btn {
+    background: transparent !important;
+    border: 1px solid #00a028 !important;
+    border-radius: 4px !important;
+    color: #00ff41 !important;
+    font-family: 'Share Tech Mono', monospace !important;
+    font-size: 13px !important;
+    padding: 8px 14px !important;
+    cursor: pointer;
+    text-shadow: 0 0 6px #00ff41;
+    transition: background 0.1s, box-shadow 0.1s;
+  }
+
+  .crt-btn:hover {
+    background: rgba(0,255,65,0.08) !important;
+    box-shadow: 0 0 12px rgba(0,255,65,0.25) !important;
+  }
+
+  .crt-btn:active {
+    background: rgba(0,255,65,0.18) !important;
+  }
+
+  .separator {
+    color: #004d10;
+    text-shadow: none;
+    margin: 8px 0;
+  }
+
+  .monitor-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: #555;
+    text-align: center;
+    margin-top: 14px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+</style>
+
+<h2 class="sr-only">Interactive CRT terminal emulator with phosphor glow and scanline effects</h2>
+
+<div class="crt-wrapper">
+  <div class="monitor-body">
+    <div class="screen-bezel">
+      <div class="crt-screen" id="screen">
+        <div class="scanlines"></div>
+        <div class="phosphor-glow"></div>
+        <div class="screen-curve"></div>
+        <div class="flicker"></div>
+
+        <div class="crt-content" id="output">
+          <div class="prompt-line bright">CHROMEX OS v2.1 — READY</div>
+          <div class="prompt-line separator">════════════════════════════════════</div>
+          <div class="prompt-line dim">SYS: 640K RAM OK &nbsp; DISPLAY: COLOR/CGA</div>
+          <div class="prompt-line dim">DATE: MON 1987-05-25 &nbsp; TIME: 09:41:22</div>
+          <div class="prompt-line separator" style="margin-bottom:12px;">════════════════════════════════════</div>
+          <div class="prompt-line"><span class="dim">C:\&gt;</span>&nbsp;LOAD "TERMINAL.BAS"</div>
+          <div class="prompt-line dim">&nbsp;&nbsp;&nbsp;LOADING...</div>
+          <div class="prompt-line dim">&nbsp;&nbsp;&nbsp;OK</div>
+          <div class="prompt-line" style="margin-top:8px;"><span class="dim">C:\&gt;</span>&nbsp;RUN</div>
+          <div class="prompt-line bright">&nbsp;&nbsp;&nbsp;HELLO, OPERATOR. AWAITING INPUT.</div>
+          <div class="prompt-line" id="live-line" style="margin-top:8px;"><span class="dim">C:\&gt;</span>&nbsp;<span class="cursor"></span></div>
+        </div>
+
+        <div class="input-row">
+          <input class="crt-input" id="cmd" type="text" placeholder="type a command..." autocomplete="off" spellcheck="false" />
+          <button class="crt-btn" onclick="runCmd()">EXEC</button>
+        </div>
+      </div>
+    </div>
+    <div class="monitor-label">⬤ &nbsp; CHROMEX &nbsp; ⬤</div>
+  </div>
+</div>
+
+<script>
+const responses = {
+  'help':    ['AVAILABLE COMMANDS:', '  HELP    — show this list', '  ABOUT   — system info', '  CLEAR   — clear screen', '  DIR     — list files', '  DATE    — show date/time', '  BEEP    — audio test', '  COLOR   — cycle theme'],
+  'about':   ['CHROMEX OS v2.1', 'CPU: 8088 @ 4.77 MHz', 'RAM: 640K CONVENTIONAL', 'DISPLAY: CGA 80x25'],
+  'dir':     ['Volume in drive C has no label.', ' Directory of C:\\', '', 'TERMINAL BAS    2,048  05-25-87', 'AUTOEXEC BAT      128  05-25-87', 'CONFIG   SYS       64  05-25-87', '   3 File(s)   655,360 bytes free'],
+  'date':    ['Current date is Mon 05-25-1987', 'Current time is 09:41:22.07'],
+  'beep':    ['♦ BEEP TEST: OK'],
+  'color':   [''],
+};
+
+const themes = [
+  { fg:'#00ff41', shadow:'0 0 8px #00ff41', dim:'#00a028', bg:'#000d00', tint:'rgba(0,80,0,0.08)' },
+  { fg:'#ffb300', shadow:'0 0 8px #ffb300', dim:'#b07800', bg:'#0d0900', tint:'rgba(80,50,0,0.08)' },
+  { fg:'#e0e0e0', shadow:'0 0 6px #e0e0e0', dim:'#888', bg:'#05050a', tint:'rgba(40,40,80,0.08)' },
+  { fg:'#00d4ff', shadow:'0 0 8px #00d4ff', dim:'#0090bb', bg:'#00090d', tint:'rgba(0,50,80,0.08)' },
+];
+let themeIdx = 0;
+
+function applyTheme(t) {
+  const screen = document.querySelector('.crt-screen');
+  const glow = document.querySelector('.phosphor-glow');
+  screen.style.background = t.bg;
+  screen.style.color = t.fg;
+  glow.style.background = `radial-gradient(ellipse at center, ${t.tint} 0%, rgba(0,0,0,0.4) 100%)`;
+  document.querySelectorAll('.crt-content .prompt-line:not(.separator), .bright').forEach(el=>{
+    el.style.textShadow = t.shadow + ', 0 0 20px ' + t.fg.replace(')',',0.3)').replace('rgb','rgba');
+    el.style.color = t.fg;
+  });
+  document.querySelectorAll('.dim').forEach(el=>{ el.style.color=t.dim; el.style.textShadow='0 0 4px '+t.dim; });
+  document.querySelectorAll('.cursor').forEach(el=>{ el.style.background=t.fg; el.style.boxShadow='0 0 8px '+t.fg; });
+}
+
+function addLines(lines) {
+  const out = document.getElementById('output');
+  const liveLine = document.getElementById('live-line');
+  lines.forEach(txt => {
+    const d = document.createElement('div');
+    d.className = 'prompt-line';
+    d.style.animation = 'fadein 0.2s ease';
+    d.innerHTML = `<span style="color:#00a028;text-shadow:0 0 4px #00a028;">&nbsp;&nbsp;&nbsp;</span>&nbsp;${txt}`;
+    out.insertBefore(d, liveLine);
+  });
+  out.scrollTop = out.scrollHeight;
+}
+
+function runCmd() {
+  const inp = document.getElementById('cmd');
+  const val = inp.value.trim().toUpperCase();
+  if (!val) return;
+
+  const out = document.getElementById('output');
+  const liveLine = document.getElementById('live-line');
+  const echo = document.createElement('div');
+  echo.className = 'prompt-line';
+  echo.innerHTML = `<span class="dim">C:\\&gt;</span>&nbsp;${val}`;
+  out.insertBefore(echo, liveLine);
+
+  if (val === 'CLEAR') {
+    const all = out.querySelectorAll('.prompt-line:not(#live-line)');
+    all.forEach(el => el.remove());
+  } else if (val === 'COLOR') {
+    themeIdx = (themeIdx + 1) % themes.length;
+    applyTheme(themes[themeIdx]);
+    addLines(['DISPLAY COLOR CHANGED.']);
+  } else if (responses[val.toLowerCase()]) {
+    addLines(responses[val.toLowerCase()]);
+  } else {
+    addLines([`BAD COMMAND OR FILE NAME: ${val}`]);
+  }
+
+  inp.value = '';
+  inp.focus();
+}
+
+document.getElementById('cmd').addEventListener('keydown', e => {
+  if (e.key === 'Enter') runCmd();
+});
+</script>

@@ -1,0 +1,242 @@
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:transparent}
+.wrap{padding:1rem 0;font-family:var(--font-sans)}
+.stage{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:var(--border-radius-lg);overflow:hidden;cursor:pointer}
+video,canvas.overlay{position:absolute;inset:0;width:100%;height:100%}
+canvas.overlay{pointer-events:none;mix-blend-mode:normal}
+.play-btn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;transition:opacity .2s}
+.play-btn i{font-size:48px;color:rgba(255,255,255,.8)}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.ctrl{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px}
+.ctrl label{font-size:12px;color:var(--color-text-secondary);display:flex;justify-content:space-between;margin-bottom:6px}
+.ctrl label span{font-weight:500;color:var(--color-text-primary)}
+input[type=range]{width:100%}
+.toggles{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.tog{font-size:12px;padding:5px 12px;border-radius:999px;border:0.5px solid var(--color-border-secondary);cursor:pointer;background:var(--color-background-secondary);color:var(--color-text-secondary);transition:all .15s}
+.tog.on{background:#1D9E75;border-color:#0F6E56;color:#fff}
+.drop-hint{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;pointer-events:none}
+.drop-hint i{font-size:36px;color:rgba(255,255,255,.5)}
+.drop-hint p{font-size:13px;color:rgba(255,255,255,.4)}
+.file-btn{position:absolute;bottom:10px;right:10px;z-index:20;font-size:12px;padding:5px 10px;border:0.5px solid rgba(255,255,255,.3);border-radius:var(--border-radius-md);background:rgba(0,0,0,.5);color:rgba(255,255,255,.7);cursor:pointer}
+</style>
+
+<h2 class="sr-only">CRT video filter — apply scanlines, phosphor glow, and curvature to any video</h2>
+<div class="wrap">
+  <div class="stage" id="stage">
+    <video id="vid" loop playsinline crossorigin="anonymous" style="object-fit:cover"></video>
+    <canvas id="overlay" class="overlay"></canvas>
+    <div class="drop-hint" id="hint">
+      <i class="ti ti-device-tv-old" aria-hidden="true"></i>
+      <p>Drop a video here or use the button</p>
+    </div>
+    <div class="play-btn" id="playBtn" style="display:none">
+      <i class="ti ti-player-play" id="playIco"></i>
+    </div>
+    <button class="file-btn" id="fileBtn"><i class="ti ti-upload"></i> Load video</button>
+    <input type="file" id="fileIn" accept="video/*" style="display:none">
+  </div>
+
+  <div class="controls">
+    <div class="ctrl">
+      <label>Scanlines <span id="scanVal">60%</span></label>
+      <input type="range" id="scanlines" min="0" max="100" value="60">
+    </div>
+    <div class="ctrl">
+      <label>Phosphor glow <span id="glowVal">40%</span></label>
+      <input type="range" id="glow" min="0" max="100" value="40">
+    </div>
+    <div class="ctrl">
+      <label>Screen curve <span id="curveVal">30%</span></label>
+      <input type="range" id="curve" min="0" max="100" value="30">
+    </div>
+    <div class="ctrl">
+      <label>Noise <span id="noiseVal">25%</span></label>
+      <input type="range" id="noise" min="0" max="100" value="25">
+    </div>
+    <div class="ctrl">
+      <label>Vignette <span id="vigVal">50%</span></label>
+      <input type="range" id="vignette" min="0" max="100" value="50">
+    </div>
+    <div class="ctrl">
+      <label>RGB shift <span id="rgbVal">20%</span></label>
+      <input type="range" id="rgb" min="0" max="100" value="20">
+    </div>
+  </div>
+
+  <div class="toggles">
+    <button class="tog on" id="togScan">Scanlines</button>
+    <button class="tog on" id="togGlow">Phosphor</button>
+    <button class="tog on" id="togCurve">Curvature</button>
+    <button class="tog on" id="togNoise">Noise</button>
+    <button class="tog on" id="togVig">Vignette</button>
+    <button class="tog on" id="togRgb">RGB shift</button>
+    <button class="tog on" id="togFlicker">Flicker</button>
+  </div>
+</div>
+
+<script>
+const vid=document.getElementById('vid');
+const canvas=document.getElementById('overlay');
+const ctx=canvas.getContext('2d');
+const stage=document.getElementById('stage');
+const hint=document.getElementById('hint');
+const playBtn=document.getElementById('playBtn');
+const playIco=document.getElementById('playIco');
+const fileIn=document.getElementById('fileIn');
+const fileBtn=document.getElementById('fileBtn');
+
+const get=id=>document.getElementById(id);
+const sliders={scanlines:get('scanlines'),glow:get('glow'),curve:get('curve'),noise:get('noise'),vignette:get('vignette'),rgb:get('rgb')};
+const vals={scanlines:get('scanVal'),glow:get('glowVal'),curve:get('curveVal'),noise:get('noiseVal'),vignette:get('vigVal'),rgb:get('rgbVal')};
+const togg={scan:get('togScan'),glow:get('togGlow'),curve:get('togCurve'),noise:get('togNoise'),vig:get('togVig'),rgb:get('togRgb'),flicker:get('togFlicker')};
+const state={scan:true,glow:true,curve:true,noise:true,vig:true,rgb:true,flicker:true};
+
+Object.entries(sliders).forEach(([k,el])=>{
+  el.addEventListener('input',()=>{
+    const v=el.value;
+    const keys={scanlines:'scanlines',glow:'glow',curve:'curve',noise:'noise',vignette:'vignette',rgb:'rgb'};
+    vals[k].textContent=v+'%';
+  });
+});
+
+Object.entries(togg).forEach(([k,btn])=>{
+  btn.addEventListener('click',()=>{state[k]=!state[k];btn.classList.toggle('on',state[k]);});
+});
+
+fileBtn.addEventListener('click',()=>fileIn.click());
+fileIn.addEventListener('change',e=>{
+  const f=e.target.files[0];
+  if(!f)return;
+  vid.src=URL.createObjectURL(f);
+  vid.load();
+  hint.style.display='none';
+  playBtn.style.display='flex';
+});
+
+stage.addEventListener('dragover',e=>e.preventDefault());
+stage.addEventListener('drop',e=>{
+  e.preventDefault();
+  const f=e.dataTransfer.files[0];
+  if(!f||!f.type.startsWith('video/'))return;
+  vid.src=URL.createObjectURL(f);
+  vid.load();
+  hint.style.display='none';
+  playBtn.style.display='flex';
+});
+
+stage.addEventListener('click',e=>{
+  if(e.target===fileBtn||e.target.closest('.file-btn'))return;
+  if(!vid.src)return;
+  if(vid.paused){vid.play();playIco.className='ti ti-player-pause';}
+  else{vid.pause();playIco.className='ti ti-player-play';}
+});
+
+vid.addEventListener('play',()=>{playIco.className='ti ti-player-pause';});
+vid.addEventListener('pause',()=>{playIco.className='ti ti-player-play';});
+
+let frameCount=0;
+let flickerAlpha=0;
+
+function resize(){
+  canvas.width=stage.offsetWidth;
+  canvas.height=stage.offsetHeight;
+}
+resize();
+new ResizeObserver(resize).observe(stage);
+
+function drawCRT(){
+  requestAnimationFrame(drawCRT);
+  if(vid.paused&&!vid.src)return;
+  frameCount++;
+  const W=canvas.width, H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  const scanAmt=sliders.scanlines.value/100;
+  const glowAmt=sliders.glow.value/100;
+  const curveAmt=sliders.curve.value/100;
+  const noiseAmt=sliders.noise.value/100;
+  const vigAmt=sliders.vignette.value/100;
+  const rgbAmt=sliders.rgb.value/100;
+
+  if(state.glow&&glowAmt>0){
+    const gr=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,Math.max(W,H)*0.6);
+    gr.addColorStop(0,`rgba(0,255,60,${glowAmt*0.06})`);
+    gr.addColorStop(0.5,`rgba(0,180,40,${glowAmt*0.04})`);
+    gr.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=gr;
+    ctx.fillRect(0,0,W,H);
+  }
+
+  if(state.scan&&scanAmt>0){
+    const lineH=Math.max(2,Math.floor(H/200)*2)||2;
+    ctx.fillStyle=`rgba(0,0,0,${scanAmt*0.75})`;
+    for(let y=0;y<H;y+=lineH*2){ctx.fillRect(0,y,W,lineH);}
+  }
+
+  if(state.noise&&noiseAmt>0){
+    const imgData=ctx.createImageData(W,H);
+    const d=imgData.data;
+    for(let i=0;i<d.length;i+=4){
+      const v=(Math.random()-0.5)*255*noiseAmt*0.6;
+      d[i]=d[i+1]=d[i+2]=128+v;
+      d[i+3]=noiseAmt*40;
+    }
+    ctx.putImageData(imgData,0,0);
+  }
+
+  if(state.curve&&curveAmt>0){
+    const o=curveAmt*0.08;
+    const gr2=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*0.3,W/2,H/2,Math.max(W,H)*0.8);
+    gr2.addColorStop(0,'rgba(0,0,0,0)');
+    gr2.addColorStop(0.6,`rgba(0,0,0,${o*0.3})`);
+    gr2.addColorStop(1,`rgba(0,0,0,${o*2})`);
+    ctx.fillStyle=gr2;
+    ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle=`rgba(0,0,0,${curveAmt*0.4})`;
+    ctx.lineWidth=W*curveAmt*0.06;
+    ctx.strokeRect(-W*0.01,-H*0.01,W*1.02,H*1.02);
+  }
+
+  if(state.vig&&vigAmt>0){
+    const vg=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*0.3,W/2,H/2,Math.max(W,H)*0.75);
+    vg.addColorStop(0,'rgba(0,0,0,0)');
+    vg.addColorStop(1,`rgba(0,0,0,${vigAmt*0.9})`);
+    ctx.fillStyle=vg;
+    ctx.fillRect(0,0,W,H);
+  }
+
+  if(state.rgb&&rgbAmt>0){
+    ctx.save();
+    ctx.globalCompositeOperation='screen';
+    const shift=rgbAmt*4;
+    ctx.fillStyle=`rgba(255,0,0,${rgbAmt*0.04})`;
+    ctx.fillRect(-shift,0,W,H);
+    ctx.fillStyle=`rgba(0,0,255,${rgbAmt*0.04})`;
+    ctx.fillRect(shift,0,W,H);
+    ctx.restore();
+    const sl=Math.max(2,Math.floor(H/300));
+    ctx.save();
+    ctx.globalCompositeOperation='screen';
+    for(let y=0;y<H;y+=sl*3){
+      ctx.fillStyle=`rgba(255,0,0,${rgbAmt*0.06})`;
+      ctx.fillRect(0,y,W,sl);
+      ctx.fillStyle=`rgba(0,255,0,${rgbAmt*0.06})`;
+      ctx.fillRect(0,y+sl,W,sl);
+      ctx.fillStyle=`rgba(0,0,255,${rgbAmt*0.06})`;
+      ctx.fillRect(0,y+sl*2,W,sl);
+    }
+    ctx.restore();
+  }
+
+  if(state.flicker){
+    if(Math.random()<0.04){flickerAlpha=Math.random()*0.12;}
+    else{flickerAlpha*=0.85;}
+    if(flickerAlpha>0.005){
+      ctx.fillStyle=`rgba(0,0,0,${flickerAlpha})`;
+      ctx.fillRect(0,0,W,H);
+    }
+  }
+}
+drawCRT();
+</script>
