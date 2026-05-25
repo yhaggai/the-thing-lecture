@@ -131,8 +131,12 @@ const {
 				</span>
 			</a>
 			<button id="mobile-lang-toggle" class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-neon-blue transition-colors cursor-pointer select-none" aria-label="Toggle language">
-				<span class="material-symbols-outlined text-on-surface-variant text-xl">language</span>
-				<span class="font-label-caps text-[9px] mt-1">
+				<div class="w-6 h-6 border border-neon-blue rounded-full flex items-center justify-center relative glow-border overflow-hidden mb-1">
+					<canvas id="gc-mobile" class="w-full h-full block" width="64" height="64"></canvas>
+					<!-- Crosshair overlay -->
+					<div class="absolute inset-0 border-[0.5px] border-neon-blue/30 rounded-full pointer-events-none"></div>
+				</div>
+				<span class="font-label-caps text-[9px]">
 					<span class="lang-he">ENGLISH</span>
 					<span class="lang-en">עברית</span>
 				</span>
@@ -163,10 +167,7 @@ const {
 				<svg class="w-4 h-4 text-terminal-green fill-current group-hover:scale-110 transition-transform" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 					<path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.66.986 3.284 1.489 4.836 1.49 5.375 0 9.75-4.332 9.752-9.658.001-2.58-1.01-5.005-2.848-6.844S14.075 1.245 11.5 1.245C6.12 1.245 1.748 5.578 1.746 10.905c0 1.602.493 3.167 1.427 4.542l-.993 3.63 3.877-.978zm11.233-5.32c-.105-.175-.385-.262-.77-.455-.385-.193-2.28-1.125-2.63-1.253-.35-.128-.606-.193-.86.193-.255.385-.98 1.253-1.2 1.477-.22.225-.44.248-.825.055-.385-.192-1.625-.6-3.096-1.91-1.144-1.02-1.916-2.28-2.14-2.666-.225-.385-.024-.593.168-.785.174-.173.385-.45.58-.675.19-.225.255-.385.385-.643.13-.257.065-.482-.033-.675-.1-.193-.86-2.074-1.18-2.842-.312-.75-.63-.647-.86-.66-.222-.012-.477-.015-.732-.015-.255 0-.67.096-1.02.482-.35.385-1.336 1.306-1.336 3.183s1.365 3.69 1.558 3.946c.193.257 2.687 4.103 6.51 5.753.91.393 1.62.628 2.172.803.914.29 1.746.248 2.404.15.733-.11 2.28-.93 2.6-1.83.32-.9 0-1.67-.103-1.83z"/>
 				</svg>
-				<span>
-					<span class="lang-he">ערוץ הקשר</span>
-					<span class="lang-en">JOIN COM-LINK</span>
-				</span>
+				<span>JOIN COM-LINK</span>
 			</a>
 			
 			<div class="flex flex-col items-center md:items-end opacity-80 border-t md:border-t-0 md:border-l border-outline-variant/30 pt-4 md:pt-0 md:pl-4 mt-4 md:mt-0">
@@ -187,15 +188,11 @@ const {
 		<!-- WebGL globe animation initialization script -->
 		<script is:inline>
 			(function(){
-				const canvas = document.getElementById('gc');
-				if (!canvas) return;
-				canvas.width = 64;
-				canvas.height = 64;
+				const ids = ['gc', 'gc-mobile'];
+				const elements = ids.map(id => document.getElementById(id)).filter(Boolean);
+				if (elements.length === 0) return;
 
-				const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-				if(!gl){ return; }
-
-				gl.viewport(0, 0, 64, 64);
+				const globes = [];
 
 				const vs = `
 					attribute vec3 pos;
@@ -207,80 +204,94 @@ const {
 					void main(){ gl_FragColor = vec4(0.15, 0.40, 0.99, 1.0); }
 				`;
 
-				function compile(type, src){
-					const s = gl.createShader(type);
-					gl.shaderSource(s, src);
-					gl.compileShader(s);
-					return s;
-				}
+				elements.forEach(canvas => {
+					canvas.width = 64;
+					canvas.height = 64;
+					const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+					if (!gl) return;
 
-				const prog = gl.createProgram();
-				gl.attachShader(prog, compile(gl.VERTEX_SHADER, vs));
-				gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fs));
-				gl.linkProgram(prog);
-				gl.useProgram(prog);
+					gl.viewport(0, 0, 64, 64);
 
-				const posLoc = gl.getAttribLocation(prog, 'pos');
-				const mvpLoc = gl.getUniformLocation(prog, 'mvp');
+					function compile(type, src){
+						const s = gl.createShader(type);
+						gl.shaderSource(s, src);
+						gl.compileShader(s);
+						return s;
+					}
 
-				const lines = [];
-				const LAT = 9, LON = 16, R = 1.0;
+					const prog = gl.createProgram();
+					gl.attachShader(prog, compile(gl.VERTEX_SHADER, vs));
+					gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fs));
+					gl.linkProgram(prog);
+					gl.useProgram(prog);
 
-				for(let i = 0; i <= LAT; i++){
-					const phi = Math.PI * (-0.5 + i/LAT);
-					const y = Math.sin(phi)*R;
-					const r = Math.cos(phi)*R;
+					const posLoc = gl.getAttribLocation(prog, 'pos');
+					const mvpLoc = gl.getUniformLocation(prog, 'mvp');
+
+					const lines = [];
+					const LAT = 9, LON = 16, R = 1.0;
+
+					for(let i = 0; i <= LAT; i++){
+						const phi = Math.PI * (-0.5 + i/LAT);
+						const y = Math.sin(phi)*R;
+						const r = Math.cos(phi)*R;
+						for(let j = 0; j < LON; j++){
+							const a0 = 2*Math.PI * j/LON;
+							const a1 = 2*Math.PI * (j+1)/LON;
+							lines.push(r*Math.cos(a0), y, r*Math.sin(a0));
+							lines.push(r*Math.cos(a1), y, r*Math.sin(a1));
+						}
+					}
+
 					for(let j = 0; j < LON; j++){
-						const a0 = 2*Math.PI * j/LON;
-						const a1 = 2*Math.PI * (j+1)/LON;
-						lines.push(r*Math.cos(a0), y, r*Math.sin(a0));
-						lines.push(r*Math.cos(a1), y, r*Math.sin(a1));
+						const lon = 2*Math.PI * j/LON;
+						const cx = Math.cos(lon), cz = Math.sin(lon);
+						for(let i = 0; i < LAT*2; i++){
+							const phi0 = Math.PI * (-0.5 + i/(LAT*2));
+							const phi1 = Math.PI * (-0.5 + (i+1)/(LAT*2));
+							lines.push(Math.cos(phi0)*cx*R, Math.sin(phi0)*R, Math.cos(phi0)*cz*R);
+							lines.push(Math.cos(phi1)*cx*R, Math.sin(phi1)*R, Math.cos(phi1)*cz*R);
+						}
 					}
-				}
 
-				for(let j = 0; j < LON; j++){
-					const lon = 2*Math.PI * j/LON;
-					const cx = Math.cos(lon), cz = Math.sin(lon);
-					for(let i = 0; i < LAT*2; i++){
-						const phi0 = Math.PI * (-0.5 + i/(LAT*2));
-						const phi1 = Math.PI * (-0.5 + (i+1)/(LAT*2));
-						lines.push(Math.cos(phi0)*cx*R, Math.sin(phi0)*R, Math.cos(phi0)*cz*R);
-						lines.push(Math.cos(phi1)*cx*R, Math.sin(phi1)*R, Math.cos(phi1)*cz*R);
-					}
-				}
+					const buf = gl.createBuffer();
+					gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+					gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(lines), gl.STATIC_DRAW);
+					gl.enableVertexAttribArray(posLoc);
+					gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
 
-				const buf = gl.createBuffer();
-				gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-				gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(lines), gl.STATIC_DRAW);
-				gl.enableVertexAttribArray(posLoc);
-				gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
+					gl.enable(gl.DEPTH_TEST);
 
-				gl.enable(gl.DEPTH_TEST);
+					const proj = mat4.create();
+					mat4.perspective(proj, 0.9, 1, 0.1, 100);
 
-				const proj = mat4.create();
-				mat4.perspective(proj, 0.9, 1, 0.1, 100);
+					const view = mat4.create();
+					mat4.translate(view, view, [0, 0, -3.2]);
 
-				const view = mat4.create();
-				mat4.translate(view, view, [0, 0, -3.2]);
+					const tilt = mat4.create();
+					mat4.rotateX(tilt, tilt, 0.3);
 
-				const tilt = mat4.create();
-				mat4.rotateX(tilt, tilt, 0.3);
+					globes.push({ gl, mvpLoc, lines, proj, view, tilt });
+				});
 
 				function frame(t){
-					gl.clearColor(0.0, 0.0, 0.0, 0.0);
-					gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+					globes.forEach(globe => {
+						const { gl, mvpLoc, lines, proj, view, tilt } = globe;
+						gl.clearColor(0.0, 0.0, 0.0, 0.0);
+						gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-					const rot = mat4.create();
-					mat4.rotateY(rot, tilt, t * 0.001);
+						const rot = mat4.create();
+						mat4.rotateY(rot, tilt, t * 0.001);
 
-					const mv = mat4.create();
-					mat4.multiply(mv, view, rot);
+						const mv = mat4.create();
+						mat4.multiply(mv, view, rot);
 
-					const mvp = mat4.create();
-					mat4.multiply(mvp, proj, mv);
+						const mvp = mat4.create();
+						mat4.multiply(mvp, proj, mv);
 
-					gl.uniformMatrix4fv(mvpLoc, false, mvp);
-					gl.drawArrays(gl.LINES, 0, lines.length / 3);
+						gl.uniformMatrix4fv(mvpLoc, false, mvp);
+						gl.drawArrays(gl.LINES, 0, lines.length / 3);
+					});
 
 					requestAnimationFrame(frame);
 				}
