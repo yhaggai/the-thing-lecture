@@ -1,4 +1,7 @@
 ---
+import { Image } from "astro:assets";
+import lecturerImg from "../assets/lecturer.png";
+import companyImg from "../assets/company.png";
 ---
 
 <section id="lecturer" class="relative">
@@ -14,10 +17,14 @@
 		
 		<div class="flex flex-col md:flex-row gap-8 items-start relative z-10">
 			<div class="w-40 h-40 shrink-0 border border-outline-variant p-1 bg-surface relative contrast-125 select-none shadow-md">
-				<img 
+				<Image 
+					src={lecturerImg}
 					alt="חגי יניב - חוקר ג׳ון קרפנטר וקולנוע ז׳אנר" 
+					width={160}
+					height={160}
+					format="webp"
+					quality={80}
 					class="w-full h-full object-cover block brightness-125" 
-					src="/images/lecturer.png"
 				/>
 			</div>
 			
@@ -42,11 +49,15 @@
 
 		<!-- Background seal watermark -->
 		<div class="absolute right-8 bottom-8 opacity-[0.06] pointer-events-none hidden md:block select-none w-44 h-44">
-			<img
+			<Image
+				src={companyImg}
 				alt=""
+				width={176}
+				height={176}
+				format="webp"
+				quality={60}
 				aria-hidden="true"
 				class="w-full h-full object-contain"
-				src="/company.png"
 			/>
 		</div>
 	</div>

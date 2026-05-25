@@ -1,14 +1,18 @@
 ---
 import Countdown from "./Countdown.astro";
+import { Image } from "astro:assets";
+import bgImg from "../assets/background.png";
 ---
 
 <section id="home" class="grid grid-cols-1 lg:grid-cols-12 gap-gutter min-h-[600px] relative">
 	<!-- Hero Background Image (Spans Full Width behind content) -->
 	<div class="absolute inset-0 border border-outline-variant/30 glow-border rounded overflow-hidden" style="z-index: -2;">
-		<img 
+		<Image 
+			src={bgImg}
 			alt="Outpost 31 snowy arctic blizzard cinematic backdrop" 
 			class="w-full h-full object-cover opacity-60 crt-flicker mix-blend-screen" 
-			src="/images/background.png"
+			loading="eager"
+			fetchpriority="high"
 		/>
 		<!-- Overlay gradient for text readability -->
 		<div class="absolute inset-0 bg-gradient-to-r from-surface via-surface/85 to-transparent"></div>
@@ -136,7 +140,7 @@ import Countdown from "./Countdown.astro";
 					<video
 						id="hero-video"
 						class="crt-surveillance-feed"
-						src="/base-snow-loop.mp4"
+						src="/base-snow-loop-opt.mp4"
 						autoplay
 						muted
 						loop
