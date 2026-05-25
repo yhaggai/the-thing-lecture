@@ -13,8 +13,16 @@ const {
 ---
 
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html class="dark" lang="he" dir="rtl">
 	<head>
+		<!-- Language Initialization Script (prevents Flash of Un-translated Content) -->
+		<script is:inline>
+			(function() {
+				const savedLang = localStorage.getItem('outpost31_lang') || 'he';
+				document.documentElement.lang = savedLang;
+				document.documentElement.dir = savedLang === 'he' ? 'rtl' : 'ltr';
+			})();
+		</script>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="icon" type="image/x-icon" href="/favicon.ico" />
@@ -59,6 +67,20 @@ const {
 				</div>
 			</div>
 
+
+			<!-- Language Toggle Switcher (Desktop) -->
+			<div class="flex items-center gap-1 border border-outline-variant p-1 bg-surface-container-low hud-border select-none relative z-50">
+				<button id="lang-btn-he" class="lang-btn px-2.5 py-1 font-terminal-xs text-[10px] text-on-surface-variant hover:text-neon-blue transition-all cursor-pointer relative" data-lang-select="he">
+					עברית
+					<span class="active-indicator absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-neon-blue rounded-full opacity-0 transition-opacity"></span>
+				</button>
+				<div class="w-px h-3.5 bg-outline-variant/60"></div>
+				<button id="lang-btn-en" class="lang-btn px-2.5 py-1 font-terminal-xs text-[10px] text-on-surface-variant hover:text-neon-blue transition-all cursor-pointer relative" data-lang-select="en">
+					ENGLISH
+					<span class="active-indicator absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-neon-blue rounded-full opacity-0 transition-opacity"></span>
+				</button>
+			</div>
+
 			<div class="flex items-center gap-4 border border-outline-variant p-2 bg-surface-container-low hud-border">
 				<div class="w-12 h-8 bg-black border border-neon-blue/30 relative overflow-hidden flex items-center justify-center">
 					<video
@@ -87,26 +109,48 @@ const {
 
 		<!-- Bottom Navigation (Mobile Only) -->
 		<nav dir="ltr" class="docked full-width bottom-0 z-50 md:hidden bg-surface-container-lowest border-t border-outline-variant bg-opacity-95 backdrop-blur-lg fixed left-0 w-full flex justify-around items-center px-margin-mobile py-2 shadow-lg">
-			<a class="flex flex-col items-center justify-center text-neon-blue bg-ghost-blue rounded-xl p-2 scale-90 transition-transform" href="#home">
+			<a class="flex flex-col items-center justify-center text-neon-blue bg-ghost-blue rounded-xl p-2 scale-90 transition-transform font-bold" href="#home">
 				<span class="material-symbols-outlined text-neon-blue text-xl" style="font-variation-settings: 'FILL' 1;">home</span>
-				<span class="font-label-caps text-[9px] mt-1">HOME</span>
+				<span class="font-label-caps text-[9px] mt-1">
+					<span class="lang-he">ראשי</span>
+					<span class="lang-en">HOME</span>
+				</span>
 			</a>
 			<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-neon-blue transition-colors" href="#itinerary">
 				<span class="material-symbols-outlined text-on-surface-variant text-xl">event</span>
-				<span class="font-label-caps text-[9px] mt-1">SCHEDULE</span>
+				<span class="font-label-caps text-[9px] mt-1">
+					<span class="lang-he">לוח זמנים</span>
+					<span class="lang-en">SCHEDULE</span>
+				</span>
 			</a>
 			<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-neon-blue transition-colors" href="#lecturer">
 				<span class="material-symbols-outlined text-on-surface-variant text-xl">person</span>
-				<span class="font-label-caps text-[9px] mt-1">LECTURER</span>
+				<span class="font-label-caps text-[9px] mt-1">
+					<span class="lang-he">המרצה</span>
+					<span class="lang-en">LECTURER</span>
+				</span>
 			</a>
+			<button id="mobile-lang-toggle" class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-neon-blue transition-colors cursor-pointer select-none" aria-label="Toggle language">
+				<span class="material-symbols-outlined text-on-surface-variant text-xl">language</span>
+				<span class="font-label-caps text-[9px] mt-1">
+					<span class="lang-he">ENGLISH</span>
+					<span class="lang-en">עברית</span>
+				</span>
+			</button>
 		</nav>
 
 		<!-- Footer -->
 		<footer dir="ltr" class="w-screen bg-surface-container-lowest border-t border-outline-variant z-10 relative mt-12 mb-16 md:mb-0">
 			<div class="flex flex-col md:flex-row justify-between items-center gap-gutter py-8 px-margin-desktop max-w-container-max mx-auto w-full">
 			<div class="flex flex-col text-center md:text-left">
-				<span class="font-label-caps text-hazard-orange tracking-widest text-sm">OUTPOST 31 FILM SERIES</span>
-				<span class="font-terminal-xs text-[10px] text-on-surface-variant opacity-80 mt-1 uppercase">EXPLORING CINEMA BEYOND THE EDGE</span>
+				<span class="font-label-caps text-hazard-orange tracking-widest text-sm">
+					<span class="lang-he">סדרת סרטי אאוטפוסט 31</span>
+					<span class="lang-en">OUTPOST 31 FILM SERIES</span>
+				</span>
+				<span class="font-terminal-xs text-[10px] text-on-surface-variant opacity-80 mt-1 uppercase">
+					<span class="lang-he">חוקרים את הקולנוע מעבר לקצה</span>
+					<span class="lang-en">EXPLORING CINEMA BEYOND THE EDGE</span>
+				</span>
 			</div>
 
 			<a
@@ -119,7 +163,10 @@ const {
 				<svg class="w-4 h-4 text-terminal-green fill-current group-hover:scale-110 transition-transform" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 					<path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.66.986 3.284 1.489 4.836 1.49 5.375 0 9.75-4.332 9.752-9.658.001-2.58-1.01-5.005-2.848-6.844S14.075 1.245 11.5 1.245C6.12 1.245 1.748 5.578 1.746 10.905c0 1.602.493 3.167 1.427 4.542l-.993 3.63 3.877-.978zm11.233-5.32c-.105-.175-.385-.262-.77-.455-.385-.193-2.28-1.125-2.63-1.253-.35-.128-.606-.193-.86.193-.255.385-.98 1.253-1.2 1.477-.22.225-.44.248-.825.055-.385-.192-1.625-.6-3.096-1.91-1.144-1.02-1.916-2.28-2.14-2.666-.225-.385-.024-.593.168-.785.174-.173.385-.45.58-.675.19-.225.255-.385.385-.643.13-.257.065-.482-.033-.675-.1-.193-.86-2.074-1.18-2.842-.312-.75-.63-.647-.86-.66-.222-.012-.477-.015-.732-.015-.255 0-.67.096-1.02.482-.35.385-1.336 1.306-1.336 3.183s1.365 3.69 1.558 3.946c.193.257 2.687 4.103 6.51 5.753.91.393 1.62.628 2.172.803.914.29 1.746.248 2.404.15.733-.11 2.28-.93 2.6-1.83.32-.9 0-1.67-.103-1.83z"/>
 				</svg>
-				<span>JOIN COM-LINK</span>
+				<span>
+					<span class="lang-he">ערוץ הקשר</span>
+					<span class="lang-en">JOIN COM-LINK</span>
+				</span>
 			</a>
 			
 			<div class="flex flex-col items-center md:items-end opacity-80 border-t md:border-t-0 md:border-l border-outline-variant/30 pt-4 md:pt-0 md:pl-4 mt-4 md:mt-0">
@@ -239,6 +286,32 @@ const {
 				}
 
 				requestAnimationFrame(frame);
+			})();
+		</script>
+
+		<!-- Global Language Controller -->
+		<script is:inline>
+			(function() {
+				function setLang(newLang) {
+					document.documentElement.lang = newLang;
+					document.documentElement.dir = newLang === 'he' ? 'rtl' : 'ltr';
+					localStorage.setItem('outpost31_lang', newLang);
+					window.dispatchEvent(new CustomEvent('lang-changed', { detail: newLang }));
+				}
+
+				// Attach to desktop buttons
+				const btnHe = document.getElementById('lang-btn-he');
+				const btnEn = document.getElementById('lang-btn-en');
+				
+				btnHe?.addEventListener('click', () => setLang('he'));
+				btnEn?.addEventListener('click', () => setLang('en'));
+
+				// Attach to mobile button
+				const btnMobile = document.getElementById('mobile-lang-toggle');
+				btnMobile?.addEventListener('click', () => {
+					const current = document.documentElement.lang;
+					setLang(current === 'he' ? 'en' : 'he');
+				});
 			})();
 		</script>
 	</body>

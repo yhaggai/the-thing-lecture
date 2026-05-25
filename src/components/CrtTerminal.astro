@@ -421,6 +421,27 @@
   ];
   let currentThemeIdx = 0;
 
+  const t_terminal = {
+    he: {
+      ready: "מחשב מרכזי אאוטפוסט 31 גרסה 4.81 — מוכן",
+      system: "מערכת: מעבד אינטל 8086 תקין &nbsp;&nbsp; אחסון: כונן תקליטורים 5.25 אינץ׳ A/B",
+      comms: "תקשורת: בסיס מקמרדו — לא מחובר [כשל מבני באנטנה]",
+      local: "טמפרטורה מקומית: -44°C &nbsp;&nbsp; רוח: 48 קשר &nbsp;&nbsp; ברומטר: 981 HPA",
+      helpHint: "הקלד <span class=\"bright\">HELP</span> להצגת רשימת הפרוטוקולים הפעילים.",
+      placeholder: "הזן שם פרוטוקול...",
+      exec: "הפעל"
+    },
+    en: {
+      ready: "OUTPOST 31 MAINFRAME v4.81 — READY",
+      system: "SYS: INTEL 8086 OK &nbsp;&nbsp; STORAGE: 5.25\" FLOPPY DRV A/B",
+      comms: "COMS: MCMURDO BASE — OFFLINE [ANTENNA STRUCTURAL FAILURE]",
+      local: "LOCAL TEMP: -44°C &nbsp;&nbsp; WIND: 48 KNOTS &nbsp;&nbsp; BAROMETER: 981 HPA",
+      helpHint: "Type <span class=\"bright\">HELP</span> to view list of active protocols.",
+      placeholder: "enter protocol name...",
+      exec: "EXEC"
+    }
+  };
+
   function cycleColor() {
     currentThemeIdx = (currentThemeIdx + 1) % themes.length;
     const t = themes[currentThemeIdx];
@@ -433,60 +454,154 @@
     if (glow) glow.style.background = `radial-gradient(ellipse at center, ${t.tint} 0%, rgba(0,0,0,0.45) 100%)`;
     if (flicker) flicker.style.backgroundColor = t.flicker;
     
-    return `THEME UPDATED TO: ${t.name}`;
+    const activeLang = document.documentElement.lang || 'he';
+    return activeLang === 'en' ? `THEME UPDATED TO: ${t.name}` : `ערכת נושא עודכנה ל: ${t.name}`;
   }
 
-  const logs: Record<string, string[]> = {
-    'blair.log': [
-      "DATE: 1982-11-12",
-      "ANALYSIS: NORWEGIAN SPECIMEN IS NOT AN INDIVIDUAL ORGANISM.",
-      "IMMEDIATE CONCLUSION: IT IMITATES OTHER LIFE FORMS WITH 100% FIDELITY.",
-      "WARNING: ASSIMILATION RATE IS EXPONENTIAL. IF IT REACHES CIVILIZATION,",
-      "TOTAL WORLD ASSIMILATION WILL OCCUR IN 27,000 HOURS FROM FIRST CONTACT.",
-      "THE OTHERS DO NOT REALIZE THIS. I HAVE DISRUPT- SABOTAGED THE HELICOPTER."
+  const logs_db = {
+    he: {
+      'blair.log': [
+        "תאריך: 1982-11-12",
+        "אנליזה: הדגימה הנורווגית אינה אורגניזם אינדיבידואלי.",
+        "מסקנה מיידית: היא מחקה צורות חיים אחרות בדיוק של 100%.",
+        "אזהרה: קצב ההטמעה הוא אקספוננציאלי. אם היא תגיע לציוויליזציה,",
+        "הטמעה עולמית מלאה תתרחש תוך 27,000 שעות מהמגע הראשון.",
+        "האחרים אינם מבינים זאת. חיבלתי במסוק כדי למנוע הימלטות."
+      ],
+      'malki.log': [
+        "תאריך: 1982-11-14",
+        "לידיעת: כל אנשי הצוות. הרדיו שקט לחלוטין.",
+        "תחנת מקמרדו אינה מגיבה לאותות חירום בתדר גבוה.",
+        "הכלבים במכלאה בכו כל הלילה. מומלץ לנקוט משנה זהירות.",
+        "נעלו את החדרים שלכם. אל תבטחו באף אחד."
+      ]
+    },
+    en: {
+      'blair.log': [
+        "DATE: 1982-11-12",
+        "ANALYSIS: NORWEGIAN SPECIMEN IS NOT AN INDIVIDUAL ORGANISM.",
+        "IMMEDIATE CONCLUSION: IT IMITATES OTHER LIFE FORMS WITH 100% FIDELITY.",
+        "WARNING: ASSIMILATION RATE IS EXPONENTIAL. IF IT REACHES CIVILIZATION,",
+        "TOTAL WORLD ASSIMILATION WILL OCCUR IN 27,000 HOURS FROM FIRST CONTACT.",
+        "THE OTHERS DO NOT REALIZE THIS. I HAVE DISRUPT- SABOTAGED THE HELICOPTER."
+      ],
+      'malki.log': [
+        "DATE: 1982-11-14",
+        "ATTN: ALL PERSONNEL. THE RADIO IS COMPLETELY SILENT.",
+        "MCMURDO STATION DOES NOT RESPOND TO HIGH FREQUENCY BEACONS.",
+        "DOGS IN THE KENNEL HAVE BEEN CRYING ALL NIGHT. EXTREME CAUTION IS ADVISED.",
+        "LOCK YOUR QUARTERS. TRUST NO ONE."
+      ]
+    }
+  };
+
+  const rosters_db = {
+    he: [
+      "יומן אנליזה של מצב הצוות:",
+      "--------------------------------------",
+      "ג'יי אר מקרידי  - סטטוס: [נקי] - ערנות מערכת גבוהה",
+      "ד\"ר בלייר      - סטטוס: [בבידוד] - זוהתה אנומליה ביולוגית",
+      "צ'ילדס         - סטטוס: [נקי] - סגן מפקד התחנה",
+      "פאלמר          - סטטוס: [חשוד] - תבנית תאית לא סדירה",
+      "נוריס          - סטטוס: [נגוע] - הטמעה מסיבית מאושרת",
+      "ד\"ר קופלנד     - סטטוס: [נקי] - פרוטוקול ארכיון בתהליך",
+      "--------------------------------------",
+      "השתמש בפרוטוקול 'BLOODTEST [NAME]' לסריקת סיכויי הטמעה חיים."
     ],
-    'malki.log': [
-      "DATE: 1982-11-14",
-      "ATTN: ALL PERSONNEL. THE RADIO IS COMPLETELY SILENT.",
-      "MCMURDO STATION DOES NOT RESPOND TO HIGH FREQUENCY BEACONS.",
-      "DOGS IN THE KENNEL HAVE BEEN CRYING ALL NIGHT. EXTREME CAUTION IS ADVISED.",
-      "LOCK YOUR QUARTERS. TRUST NO ONE."
+    en: [
+      "CREW BIO-STATUS ANALYSIS LOG:",
+      "--------------------------------------",
+      "J.R. MACREADY   - STATUS: [CLEAR] - HIGH SYSTEM VIGILANCE",
+      "DR. BLAIR       - STATUS: [CONFINED] - BIO-ANOMALY DETECTED",
+      "CHILDS          - STATUS: [CLEAR] - STATION SECOND-IN-COMMAND",
+      "PALMER          - STATUS: [SUSPICIOUS] - IRREGULAR CELLULAR TEMPLATE",
+      "NORRIS          - STATUS: [INFECTED] - MASSIVE ASSIMILATION CONFIRMED",
+      "DR. COPELAND    - STATUS: [CLEAR] - ARCHIVAL PROTOCOL IN PROGRESS",
+      "--------------------------------------",
+      "USE 'BLOODTEST [NAME]' PROTOCOL FOR LIVE ASSIMILATION PROBABILITY SCANS."
     ]
   };
 
-  const rosters = [
-    "CREW BIO-STATUS ANALYSIS LOG:",
-    "--------------------------------------",
-    "J.R. MACREADY   - STATUS: [CLEAR] - HIGH SYSTEM VIGILANCE",
-    "DR. BLAIR       - STATUS: [CONFINED] - BIO-ANOMALY DETECTED",
-    "CHILDS          - STATUS: [CLEAR] - STATION SECOND-IN-COMMAND",
-    "PALMER          - STATUS: [SUSPICIOUS] - IRREGULAR CELLULAR TEMPLATE",
-    "NORRIS          - STATUS: [INFECTED] - MASSIVE ASSIMILATION CONFIRMED",
-    "DR. COPELAND    - STATUS: [CLEAR] - ARCHIVAL PROTOCOL IN PROGRESS",
-    "--------------------------------------",
-    "USE 'BLOODTEST [NAME]' PROTOCOL FOR LIVE ASSIMILATION PROBABILITY SCANS."
-  ];
-
-  const helpList = [
-    "================================================",
-    "AWAITING DECRYPT KEY... SUPPORTED TERMINAL CODEWORDS:",
-    "  HELP       - List available operational codes",
-    "  DIAGNOSTIC - Execute station utility check",
-    "  ROSTER     - Scan personnel biology registry",
-    "  BLOODTEST  - E.g. 'BLOODTEST PALMER'. Analyze target organism",
-    "  LOGS       - Scan classified data logs",
-    "  READ       - Read specific file, e.g., 'READ BLAIR.LOG'",
-    "  RSVP       - E.g. 'RSVP J.R. MACREADY'. Register for screening",
-    "  WHATSAPP   - Join Outpost 31 secure communication channel",
-    "  COLOR      - Cycle Phosphor color themes",
-    "  CLEAR      - Purge screen terminal memory",
-    "================================================"
-  ];
+  const helpList_db = {
+    he: [
+      "================================================",
+      "ממתין למפתח פענוח... קודי פקודה נתמכים:",
+      "  HELP       - הצגת רשימת פקודות הפעלה פעילות",
+      "  DIAGNOSTIC - ביצוע בדיקת תקינות מערכות הבסיס",
+      "  ROSTER     - סריקת רישום ביולוגי של אנשי הצוות",
+      "  BLOODTEST  - דוגמה: 'BLOODTEST PALMER'. אנליזה תאית של הנבדק",
+      "  LOGS       - סריקת יומני נתונים מסווגים",
+      "  READ       - קריאת קובץ מסוים, דוגמה: 'READ BLAIR.LOG'",
+      "  RSVP       - דוגמה: 'RSVP חגי יניב'. הרשמה להקרנה של הסרט",
+      "  WHATSAPP   - הצטרפות לערוץ קשר מאובטח בוואטסאפ",
+      "  COLOR      - החלפת ערכות צבע זרחניות של המסך",
+      "  CLEAR      - ניקוי זיכרון המסך והיסטוריית הפקודות",
+      "================================================"
+    ],
+    en: [
+      "================================================",
+      "AWAITING DECRYPT KEY... SUPPORTED TERMINAL CODEWORDS:",
+      "  HELP       - List available operational codes",
+      "  DIAGNOSTIC - Execute station utility check",
+      "  ROSTER     - Scan personnel biology registry",
+      "  BLOODTEST  - E.g. 'BLOODTEST PALMER'. Analyze target organism",
+      "  LOGS       - Scan classified data logs",
+      "  READ       - Read specific file, e.g., 'READ BLAIR.LOG'",
+      "  RSVP       - E.g. 'RSVP J.R. MACREADY'. Register for screening",
+      "  WHATSAPP   - Join Outpost 31 secure communication channel",
+      "  COLOR      - Cycle Phosphor color themes",
+      "  CLEAR      - Purge screen terminal memory",
+      "================================================"
+    ]
+  };
 
   const commandInput = document.getElementById('terminal-cmd') as HTMLInputElement;
   const execButton = document.getElementById('exec-btn');
   const outputPane = document.getElementById('output-pane');
   const liveLine = document.getElementById('live-terminal-line');
+
+  function initTerminalLines() {
+    if (!outputPane || !liveLine) return;
+    
+    // Clear previous lines
+    const allLines = outputPane.querySelectorAll('.prompt-line:not(#live-terminal-line)');
+    allLines.forEach(l => l.remove());
+    
+    const activeLang = document.documentElement.lang || 'he';
+    const localized = t_terminal[activeLang === 'en' ? 'en' : 'he'];
+    
+    const headerLines = [
+      localized.ready,
+      "================================================",
+      localized.system,
+      localized.comms,
+      localized.local,
+      "================================================",
+      localized.helpHint
+    ];
+
+    headerLines.forEach((lineText, index) => {
+      const lineDiv = document.createElement('div');
+      lineDiv.className = 'prompt-line';
+      if (index === 0) lineDiv.classList.add('bright', 'font-bold');
+      else if (index === 1 || index === 5) {
+        lineDiv.className = 'prompt-line separator';
+        if (index === 5) lineDiv.style.marginBottom = '12px';
+      }
+      else lineDiv.classList.add('dim');
+      
+      lineDiv.innerHTML = lineText;
+      outputPane.insertBefore(lineDiv, liveLine);
+    });
+
+    if (commandInput) {
+      commandInput.placeholder = localized.placeholder;
+    }
+    const execBtn = document.getElementById('exec-btn');
+    if (execBtn) {
+      execBtn.innerText = localized.exec;
+    }
+  }
 
   function addOutputLines(lines: string[]) {
     if (!outputPane || !liveLine) return;
@@ -496,11 +611,11 @@
       lineDiv.className = 'prompt-line';
       
       // Basic highlight logic
-      if (lineText.includes('CLEAR') || lineText.includes('OK') || lineText.includes('GRANTED')) {
+      if (lineText.includes('CLEAR') || lineText.includes('OK') || lineText.includes('GRANTED') || lineText.includes('תקין') || lineText.includes('אושר')) {
         lineDiv.classList.add('success');
-      } else if (lineText.includes('INFECTED') || lineText.includes('ASSIMILATION') || lineText.includes('WARNING') || lineText.includes('FAILURE')) {
+      } else if (lineText.includes('INFECTED') || lineText.includes('ASSIMILATION') || lineText.includes('WARNING') || lineText.includes('FAILURE') || lineText.includes('נגוע') || lineText.includes('אזהרה')) {
         lineDiv.classList.add('danger');
-      } else if (lineText.includes('SUSPICIOUS') || lineText.includes('CONFINED')) {
+      } else if (lineText.includes('SUSPICIOUS') || lineText.includes('CONFINED') || lineText.includes('חשוד') || lineText.includes('בבידוד')) {
         lineDiv.classList.add('warn');
       }
       
@@ -516,6 +631,9 @@
     if (!commandInput || !liveLine || !outputPane) return;
     const fullVal = commandInput.value.trim();
     if (!fullVal) return;
+
+    const activeLang = document.documentElement.lang || 'he';
+    const langKey = activeLang === 'en' ? 'en' : 'he';
 
     // Play button execute beep
     audio.playBeep(650, 0.08);
@@ -534,33 +652,47 @@
       const allLines = outputPane.querySelectorAll('.prompt-line:not(#live-terminal-line)');
       allLines.forEach(l => l.remove());
     } else if (cmd === 'HELP') {
-      addOutputLines(helpList);
+      addOutputLines(helpList_db[langKey]);
     } else if (cmd === 'COLOR') {
       const themeMsg = cycleColor();
       addOutputLines([themeMsg]);
     } else if (cmd === 'DIAGNOSTIC' || cmd === 'SYSTEM') {
-      addOutputLines([
+      const resp = activeLang === 'en' ? [
         "PERFORMING FULL SUB-ICE UTILITY SCANS...",
         "GENERATOR CAPACITY : 84% [STABLE]",
         "STATION STRUCT TEMP: -44°C (EXTREME CHILL)",
         "OUTSIDE VENTILATION: BLOCKED BY COMPACT SNOW DRIFT",
         "COMS ARRAY STATUS  : DISCONNECTED. MCMURDO UNREACHABLE.",
         "THREAT METRIC      : HIGH CELLULAR THREAT DETECTED ON STATION PREMISES."
-      ]);
+      ] : [
+        "מבצע בדיקת מערכות תת-קרקעיות מקיפה...",
+        "קיבולת גנרטור : 84% [יציב]",
+        "טמפרטורת הבסיס: -44°C (קור קיצוני)",
+        "אוורור חיצוני: חסום על ידי ערמות שלג גבוהות",
+        "מצב תקשורת   : מנותק. בסיס מקמרדו אינו זמין.",
+        "איום ביולוגי   : זוהה איום תאי גבוה בשטח הבסיס."
+      ];
+      addOutputLines(resp);
     } else if (cmd === 'ROSTER') {
-      addOutputLines(rosters);
+      addOutputLines(rosters_db[langKey]);
     } else if (cmd === 'BLOODTEST') {
       if (!arg) {
-        addOutputLines(["ERROR: PROTOCOL REQUIRES ARGUMENT: 'BLOODTEST [SUBJECT]'", "EXAMPLE: 'BLOODTEST PALMER'"]);
+        const err = activeLang === 'en' ? 
+          ["ERROR: PROTOCOL REQUIRES ARGUMENT: 'BLOODTEST [SUBJECT]'", "EXAMPLE: 'BLOODTEST PALMER'"] : 
+          ["שגיאה: הפרוטוקול דורש ארגומנט: 'BLOODTEST [שם SUBJECT]'", "דוגמה: 'BLOODTEST PALMER'"];
+        addOutputLines(err);
       } else {
         const subject = arg.toUpperCase();
-        addOutputLines([`INITIATING CELLULAR SCREENING SPECTRAL SCAN FOR SUBJECT: ${subject}`]);
+        const startScan = activeLang === 'en' ? 
+          `INITIATING CELLULAR SCREENING SPECTRAL SCAN FOR SUBJECT: ${subject}` : 
+          `מתחיל סריקה ספקטרלית ואנליזת תאים עבור: ${subject}`;
+        addOutputLines([startScan]);
         audio.playSweep();
         
         setTimeout(() => {
           if (subject.includes('PALMER') || subject.includes('NORRIS')) {
             audio.playBeep(250, 0.4);
-            addOutputLines([
+            const inf = activeLang === 'en' ? [
               "------------------------------------------------",
               `ALERT! BIO-SPECIMEN ANALYZER DETECTED INCONGRUENCY.`,
               `SUBJECT: ${subject}`,
@@ -568,65 +700,99 @@
               "REACTION METRIC: MASSIVE FLAMMABLE ANOMALY DETECTED IN PETRI DISH.",
               "CLASSIFICATION: [ INFECTED ] — ENGAGE DEFENSIVE FLAMETHROWER TACTICS NOW.",
               "------------------------------------------------"
-            ]);
+            ] : [
+              "------------------------------------------------",
+              `אזהרה! המנתח הביולוגי זיהה אי-התאמה תאית חמורה.`,
+              `נבדק: ${subject}`,
+              "הסתברות להדבקה: [ 99.98% ]",
+              "תגובה לחום: זוהה עיוות תאי אלים ומדבק בצלחת הפטרי.",
+              "סיווג: [ נגוע ] — הפעל להביור הגנתי באופן מיידי.",
+              "------------------------------------------------"
+            ];
+            addOutputLines(inf);
           } else if (subject.includes('MACREADY') || subject.includes('CHILDS') || subject.includes('COPELAND')) {
             audio.playBeep(1100, 0.15);
-            addOutputLines([
+            const clr = activeLang === 'en' ? [
               "------------------------------------------------",
               `SUBJECT: ${subject}`,
               "ASSIMILATION PROBABILITY: [ 0.04% ]",
               "REACTION METRIC: PURE CELLULAR ADHERENCE. NO REACTION TO SECURED COPPER WIRE HEAT TEST.",
               "CLASSIFICATION: [ CLEAR ]",
               "------------------------------------------------"
-            ]);
+            ] : [
+              "------------------------------------------------",
+              `נבדק: ${subject}`,
+              "הסתברות להדבקה: [ 0.04% ]",
+              "תגובה לחום: היצמדות תאים תקינה. אין תגובה לבדיקת החום של חוט הנחושת.",
+              "סיווג: [ נקי ]",
+              "------------------------------------------------"
+            ];
+            addOutputLines(clr);
           } else {
             // Random output for custom entries
             const infected = Math.random() > 0.5;
             if (infected) {
               audio.playBeep(250, 0.4);
-              addOutputLines([
+              const infRand = activeLang === 'en' ? [
                 "------------------------------------------------",
                 `SUBJECT: ${subject}`,
                 "ASSIMILATION PROBABILITY: [ 87.4% ]",
                 "REACTION METRIC: PARTIAL ASSIMILATION DETECTED.",
                 "CLASSIFICATION: [ INFECTED ]",
                 "------------------------------------------------"
-              ]);
+              ] : [
+                "------------------------------------------------",
+                `נבדק: ${subject}`,
+                "הסתברות להדבקה: [ 87.4% ]",
+                "תגובה לחום: זוהתה הדבקה תאית חלקית.",
+                "סיווג: [ נגוע ]",
+                "------------------------------------------------"
+              ];
+              addOutputLines(infRand);
             } else {
               audio.playBeep(980, 0.12);
-              addOutputLines([
+              const clrRand = activeLang === 'en' ? [
                 "------------------------------------------------",
                 `SUBJECT: ${subject}`,
                 "ASSIMILATION PROBABILITY: [ 1.12% ]",
                 "REACTION METRIC: CELLULAR INTEGRITY SATISFACTORY.",
                 "CLASSIFICATION: [ CLEAR ]",
                 "------------------------------------------------"
-              ]);
+              ] : [
+                "------------------------------------------------",
+                `נבדק: ${subject}`,
+                "הסתברות להדבקה: [ 1.12% ]",
+                "תגובה לחום: יציבות תאים תקינה ומשביעת רצון.",
+                "סיווג: [ נקי ]",
+                "------------------------------------------------"
+              ];
+              addOutputLines(clrRand);
             }
           }
         }, 800);
       }
     } else if (cmd === 'LOGS') {
-      addOutputLines([
-        "CLASSIFIED INTERNAL STATION MEMORY SYSTEM SECURE:",
-        "------------------------------------------------",
-        "  BLAIR.LOG     - CELLULAR ANOMALY STUDY NOTES (1982-11-12)",
-        "  MALKI.LOG     - METEOROLOGICAL & COMS BLACKOUT LOG (1982-11-14)",
-        "------------------------------------------------",
-        "USE 'READ [LOGNAME]' TO DECRYPT AN INDIVIDUAL FILE PACK."
-      ]);
+      addOutputLines(logs_index_db[langKey] || logs_index_db['he']);
     } else if (cmd === 'READ') {
       const fileLower = arg.toLowerCase();
       if (!arg) {
-        addOutputLines(["ERROR: FILE IDENTIFIER BLANK. E.G., 'READ BLAIR.LOG'"]);
-      } else if (logs[fileLower]) {
-        addOutputLines([`DECRYPTING RESOURCE: ${arg.toUpperCase()}...`, ...logs[fileLower]]);
+        const err = activeLang === 'en' ? 
+          "ERROR: FILE IDENTIFIER BLANK. E.G., 'READ BLAIR.LOG'" : 
+          "שגיאה: שם הקובץ ריק. דוגמה: 'READ BLAIR.LOG'";
+        addOutputLines([err]);
+      } else if (logs_db[langKey][fileLower]) {
+        const startRead = activeLang === 'en' ? `DECRYPTING RESOURCE: ${arg.toUpperCase()}...` : `מפענח משאב נתונים: ${arg.toUpperCase()}...`;
+        addOutputLines([startRead, ...logs_db[langKey][fileLower]]);
       } else {
-        addOutputLines([`FILE ERROR: NOT FOUND UNREADABLE: ${arg.toUpperCase()}`]);
+        const notFound = activeLang === 'en' ? `FILE ERROR: NOT FOUND UNREADABLE: ${arg.toUpperCase()}` : `שגיאת קובץ: לא נמצא או אינו קריא: ${arg.toUpperCase()}`;
+        addOutputLines([notFound]);
       }
     } else if (cmd === 'RSVP') {
       if (!arg) {
-        addOutputLines(["ERROR: ENTER YOUR NAME. PROTOCOL: 'RSVP [YOUR NAME]'", "EXAMPLE: 'RSVP R.J. MACREADY'"]);
+        const err = activeLang === 'en' ? 
+          ["ERROR: ENTER YOUR NAME. PROTOCOL: 'RSVP [YOUR NAME]'", "EXAMPLE: 'RSVP R.J. MACREADY'"] : 
+          ["שגיאה: נא להזין שם. פרוטוקול: 'RSVP [השם שלך]'", "דוגמה: 'RSVP R.J. MACREADY'"];
+        addOutputLines(err);
       } else {
         const attendee = arg.toUpperCase();
         audio.playBeep(1200, 0.2);
@@ -635,7 +801,7 @@
         }, 120);
         
         const badgeCode = 'OUTPOST31-' + Math.floor(100000 + Math.random() * 900000);
-        addOutputLines([
+        const rsvpResp = activeLang === 'en' ? [
           "------------------------------------------------",
           "SYSTEM STATUS: ACCESS TICKET GRANTED",
           `HOLDER: ${attendee}`,
@@ -644,27 +810,72 @@
           "DATE: JUNE 11, 2026 @ 19:30 HOURS",
           "FACILITY CODE: OUTPOST 31 COMMUNION SHELTER",
           "------------------------------------------------"
-        ]);
+        ] : [
+          "------------------------------------------------",
+          "מצב מערכת: כרטיס גישה אושר בהצלחה",
+          `מחזיק: ${attendee}`,
+          `מזהה רישום: ${badgeCode}`,
+          "אירוע: הקרנה מיוחדת והרצאה חסויה של סרט THE THING",
+          "תאריך: 11 ביוני, 2026 בשעה 19:30",
+          "קוד מתקן: מקלט קהילתי אאוטפוסט 31",
+          "------------------------------------------------"
+        ];
+        addOutputLines(rsvpResp);
       }
     } else if (cmd === 'WHATSAPP' || cmd === 'JOIN' || cmd === 'CHAT') {
       audio.playBeep(1200, 0.2);
-      addOutputLines([
+      const waResp = activeLang === 'en' ? [
         "------------------------------------------------",
         "ESTABLISHING SECURE COM-LINK CHNL. WHATSAPP...",
         "STATUS: CONNECTED",
         "LINK: <a href='https://chat.whatsapp.com/IdrJQ24IP9vF2Owfvu3TGA?mode=gi_t' target='_blank' style='color:#22c55e;text-decoration:underline;'>CLICK HERE TO JOIN THE OUTPOST 31 GROUP</a>",
         "------------------------------------------------"
-      ]);
+      ] : [
+        "------------------------------------------------",
+        "מקים ערוץ קשר מאובטח לחמ״ל בוואטסאפ...",
+        "מצב: מחובר",
+        "קישור: <a href='https://chat.whatsapp.com/IdrJQ24IP9vF2Owfvu3TGA?mode=gi_t' target='_blank' style='color:#22c55e;text-decoration:underline;'>לחצו כאן להצטרפות לקבוצה המאובטחת</a>",
+        "------------------------------------------------"
+      ];
+      addOutputLines(waResp);
       setTimeout(() => {
         window.open('https://chat.whatsapp.com/IdrJQ24IP9vF2Owfvu3TGA?mode=gi_t', '_blank');
       }, 500);
     } else {
-      addOutputLines([`COMMAND/PROTOCOL NOT SUPPORTED: '${cmd}'`]);
+      const unsupported = activeLang === 'en' ? `COMMAND/PROTOCOL NOT SUPPORTED: '${cmd}'` : `הפקודה או הפרוטוקול אינם נתמכים: '${cmd}'`;
+      addOutputLines([unsupported]);
     }
 
     commandInput.value = '';
     commandInput.focus();
   }
+
+  const logs_index_db = {
+    he: [
+      "מערכת זיכרון פנימית מאובטחת של הבסיס:",
+      "------------------------------------------------",
+      "  BLAIR.LOG     - הערות מחקר על האנומליה התאית (1982-11-12)",
+      "  MALKI.LOG     - יומן מטאורולוגי ונתוני תקשורת (1982-11-14)",
+      "------------------------------------------------",
+      "השתמש ב-'READ [LOGNAME]' כדי לקרוא קובץ מסוים."
+    ],
+    en: [
+      "CLASSIFIED INTERNAL STATION MEMORY SYSTEM SECURE:",
+      "------------------------------------------------",
+      "  BLAIR.LOG     - CELLULAR ANOMALY STUDY NOTES (1982-11-12)",
+      "  MALKI.LOG     - METEOROLOGICAL & COMS BLACKOUT LOG (1982-11-14)",
+      "------------------------------------------------",
+      "USE 'READ [LOGNAME]' TO DECRYPT AN INDIVIDUAL FILE PACK."
+    ]
+  };
+
+  // Initialize terminal
+  initTerminalLines();
+
+  // Listen for language changes globally
+  window.addEventListener('lang-changed', () => {
+    initTerminalLines();
+  });
 
   // Key sound and listeners
   commandInput?.addEventListener('input', () => {

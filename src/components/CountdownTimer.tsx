@@ -5,26 +5,56 @@ export default function CountdownTimer() {
   const targetDate = new Date("2026-06-11T19:30:00").getTime()
   const [difference, setDifference] = useState<number>(0)
   const [isMounted, setIsMounted] = useState(false)
+  const [lang, setLang] = useState('he')
 
   useEffect(() => {
     setIsMounted(true)
     setDifference(targetDate - Date.now())
 
-    const interval = setInterval(() => {
-      const diff = targetDate - Date.now()
-      setDifference(diff)
-      if (diff <= 0) {
-        clearInterval(interval)
+    if (typeof window !== 'undefined') {
+      setLang(document.documentElement.lang || 'he')
+      
+      const handleLangChange = (e: any) => {
+        setLang(e.detail || 'he')
       }
-    }, 1000)
+      window.addEventListener('lang-changed', handleLangChange)
+      
+      const interval = setInterval(() => {
+        const diff = targetDate - Date.now()
+        setDifference(diff)
+        if (diff <= 0) {
+          clearInterval(interval)
+        }
+      }, 1000)
 
-    return () => clearInterval(interval)
+      return () => {
+        clearInterval(interval)
+        window.removeEventListener('lang-changed', handleLangChange)
+      }
+    }
   }, [])
+
+  const t = {
+    he: {
+      active: "שידור פעיל / ההקרנה החלה",
+      days: "ימים",
+      hours: "שעות",
+      minutes: "דקות",
+      seconds: "שניות"
+    },
+    en: {
+      active: "TRANSMISSION ACTIVE / SCREENING STARTED",
+      days: "DAYS",
+      hours: "HOURS",
+      minutes: "MINS",
+      seconds: "SECS"
+    }
+  }[lang === 'en' ? 'en' : 'he']
 
   if (difference <= 0 && isMounted) {
     return (
       <span className="col-span-4 font-label-caps text-hazard-orange text-lg animate-pulse uppercase tracking-widest">
-        שידור פעיל / ההקרנה החלה
+        {t.active}
       </span>
     )
   }
@@ -46,7 +76,7 @@ export default function CountdownTimer() {
             <span>{pad(days)}</span>
           )}
         </span>
-        <span className="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">ימים</span>
+        <span className="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">{t.days}</span>
       </div>
       <div className="flex flex-col border-r border-outline-variant/30 px-2">
         <span className="font-terminal-xs text-3xl text-primary font-bold tracking-tight drop-shadow-[0_0_8px_rgba(181,196,255,0.6)]">
@@ -56,7 +86,7 @@ export default function CountdownTimer() {
             <span>{pad(hours)}</span>
           )}
         </span>
-        <span className="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">שעות</span>
+        <span className="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">{t.hours}</span>
       </div>
       <div className="flex flex-col border-r border-outline-variant/30 px-2">
         <span className="font-terminal-xs text-3xl text-primary font-bold tracking-tight drop-shadow-[0_0_8px_rgba(181,196,255,0.6)]">
@@ -66,7 +96,7 @@ export default function CountdownTimer() {
             <span>{pad(minutes)}</span>
           )}
         </span>
-        <span className="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">דקות</span>
+        <span className="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">{t.minutes}</span>
       </div>
       <div className="flex flex-col pl-2">
         <span className="font-terminal-xs text-3xl text-primary font-bold tracking-tight drop-shadow-[0_0_8px_rgba(181,196,255,0.6)]">
@@ -76,7 +106,7 @@ export default function CountdownTimer() {
             <span className="animate-[pulse_1s_ease-in-out_infinite]">{pad(seconds)}</span>
           )}
         </span>
-        <span className="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">שניות</span>
+        <span className="font-terminal-xs text-[10px] text-on-surface-variant uppercase tracking-wider">{t.seconds}</span>
       </div>
     </div>
   )
