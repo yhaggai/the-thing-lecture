@@ -1,7 +1,7 @@
 ---
 ---
 
-<div dir="ltr" class="bg-surface-container/60 backdrop-blur-md border border-outline-variant p-6 relative hud-border w-full max-w-[800px] mx-auto my-8">
+<div dir="ltr" class="bg-surface-container/60 backdrop-blur-md border border-outline-variant p-3 sm:p-6 relative hud-border w-full max-w-[800px] mx-auto my-8">
   <!-- Corners for HUD styling -->
   <div class="hud-corner-tl"></div>
   <div class="hud-corner-tr"></div>
@@ -11,7 +11,7 @@
   <div class="flex justify-between items-center mb-6 border-b border-outline-variant/50 pb-3">
     <div class="flex items-center gap-3">
       <div class="w-2.5 h-2.5 bg-hazard-orange rounded-full animate-pulse shadow-[0_0_8px_#f59e0b]"></div>
-      <span class="font-terminal-xs text-sm text-neon-blue uppercase tracking-widest font-bold">U.S. OUTPOST #31 — MAINFRAME NODE 4</span>
+      <span class="font-terminal-xs text-xs sm:text-sm text-neon-blue uppercase tracking-widest font-bold">U.S. OUTPOST #31 — MAINFRAME NODE 4</span>
     </div>
     <div class="flex gap-1.5 opacity-60">
       <div class="w-1.5 h-3.5 bg-neon-blue transform skew-x-12"></div>
@@ -42,7 +42,7 @@
         </div>
 
         <div class="input-row">
-          <span class="dim font-terminal-xs text-sm self-center">A:\&gt;</span>
+          <span class="dim font-terminal-xs text-xs sm:text-sm self-center">A:\&gt;</span>
           <input class="crt-input" id="terminal-cmd" type="text" placeholder="enter protocol name..." autocomplete="off" spellcheck="false" />
           <button class="crt-btn font-bold" id="exec-btn">EXEC</button>
         </div>
@@ -58,11 +58,17 @@
   .monitor-body {
     background: #1e1b18;
     border-radius: 24px;
-    padding: 24px 24px 40px;
+    padding: 12px 12px 30px;
     box-shadow: 0 12px 48px rgba(0,0,0,0.85), inset 0 2px 4px rgba(255,255,255,0.03);
     width: 100%;
     position: relative;
     border: 1px solid #2d2620;
+  }
+
+  @media (min-width: 640px) {
+    .monitor-body {
+      padding: 24px 24px 40px;
+    }
   }
 
   .monitor-body::after {
@@ -93,12 +99,20 @@
     border-radius: 8px;
     overflow: hidden;
     min-height: 380px;
-    padding: 20px 24px;
+    padding: 10px 12px;
     font-family: 'Share Tech Mono', monospace;
     color: #38bdf8; /* Default Blue matching Neon Blue of theme */
-    font-size: 14px;
-    line-height: 1.6;
+    font-size: 11px;
+    line-height: 1.4;
     transition: color 0.2s, background-color 0.2s;
+  }
+
+  @media (min-width: 640px) {
+    .crt-screen {
+      padding: 20px 24px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
   }
 
   .scanlines {
@@ -216,12 +230,19 @@
     border-radius: 4px !important;
     color: inherit !important;
     font-family: 'Share Tech Mono', monospace !important;
-    font-size: 14px !important;
-    padding: 6px 12px !important;
+    font-size: 11px !important;
+    padding: 6px 8px !important;
     caret-color: transparent;
     outline: none !important;
     text-shadow: 0 0 4px currentColor;
     box-shadow: inset 0 0 8px rgba(0,0,0,0.5) !important;
+  }
+
+  @media (min-width: 640px) {
+    .crt-input {
+      font-size: 14px !important;
+      padding: 6px 12px !important;
+    }
   }
 
   .crt-btn {
@@ -230,11 +251,18 @@
     border-radius: 4px !important;
     color: inherit !important;
     font-family: 'Share Tech Mono', monospace !important;
-    font-size: 13px !important;
-    padding: 6px 16px !important;
+    font-size: 10px !important;
+    padding: 6px 10px !important;
     cursor: pointer;
     text-shadow: 0 0 4px currentColor;
     transition: background 0.1s, box-shadow 0.1s;
+  }
+
+  @media (min-width: 640px) {
+    .crt-btn {
+      font-size: 13px !important;
+      padding: 6px 16px !important;
+    }
   }
 
   .crt-btn:hover {
