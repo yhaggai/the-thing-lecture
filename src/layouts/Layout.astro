@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
 	title?: string;
@@ -15,6 +16,7 @@ const {
 <!DOCTYPE html>
 <html class="dark" lang="he" dir="rtl">
 	<head>
+		<ClientRouter />
 		<!-- Language Initialization Script (prevents Flash of Un-translated Content) -->
 		<script is:inline>
 			(function() {
@@ -357,6 +359,40 @@ const {
 					setLang(current === 'he' ? 'en' : 'he');
 				});
 			})();
+		</script>
+
+		<!-- Scroll Reveal Observer -->
+		<script is:inline>
+			document.addEventListener("astro:page-load", () => {
+				const observer = new IntersectionObserver((entries) => {
+					entries.forEach((entry) => {
+						if (entry.isIntersecting) {
+							entry.target.classList.add('is-visible');
+							observer.unobserve(entry.target);
+						}
+					});
+				}, {
+					threshold: 0.1,
+					rootMargin: "0px 0px -50px 0px"
+				});
+
+				const sections = document.querySelectorAll('main > *');
+				sections.forEach((section, i) => {
+					// Skip the Hero (first child) — it contains position:fixed
+					// snow canvases that break when a parent has a CSS transform
+					if (i === 0) return;
+					section.classList.add('scroll-reveal');
+					observer.observe(section);
+				});
+			});
+			
+			// Also run immediately for first load if astro:page-load doesn't catch it quickly enough
+			setTimeout(() => {
+				const sections = document.querySelectorAll('main > *');
+				if (sections.length > 0 && !sections[0].classList.contains('scroll-reveal')) {
+					document.dispatchEvent(new Event("astro:page-load"));
+				}
+			}, 100);
 		</script>
 	</body>
 </html>
