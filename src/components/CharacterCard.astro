@@ -59,7 +59,6 @@ const tempHe = statsHe.split('|')[1]?.trim() || "";
     <div class="absolute inset-0 pointer-events-none z-10 scanline opacity-30"></div>
     <div class="absolute inset-0 pointer-events-none z-10 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
     
-    <!-- Character Image -->
     <img 
       src={img} 
       alt={`Surveillance camera dossier of ${nameEn}, Outpost 31 ${roleEn}`}
@@ -67,7 +66,7 @@ const tempHe = statsHe.split('|')[1]?.trim() || "";
       height="400"
       decoding="async"
       loading="lazy"
-      class="w-full h-full object-contain transition-all duration-500 scale-[0.85] group-hover:scale-[0.9] filter saturate-[0.6] sepia-[0.35] brightness-[0.75] group-hover:saturate-[1.1] group-hover:brightness-[1.0] group-hover:sepia-0"
+      class={`w-full h-full object-contain transition-all duration-500 filter saturate-[0.6] sepia-[0.35] brightness-[0.75] group-hover:saturate-[1.1] group-hover:brightness-[1.0] group-hover:sepia-0 ${id === 'clark' ? 'scale-[1.3] group-hover:scale-[1.4]' : 'scale-[0.85] group-hover:scale-[0.9]'}`}
     />
     
     <!-- Temperature HUD Badge overlay -->
