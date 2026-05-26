@@ -1,5 +1,40 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
+/* Entrance Animations for Headers & Footers */
+@keyframes navSlideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes navSlideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-nav-desktop {
+  animation: navSlideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-nav-mobile {
+  animation: navSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 @theme {
   --color-tertiary-fixed: #ffdbcf;
   --color-alert-red: #ffb4ab;

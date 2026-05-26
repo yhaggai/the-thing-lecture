@@ -53,7 +53,7 @@ const {
 		<div class="fixed inset-0 pointer-events-none z-[100] scanline opacity-25"></div>
 
 		<!-- Top Navigation (Shared Component) - Desktop Only -->
-		<nav dir="ltr" class="hidden md:flex w-screen bg-surface-container-lowest border-b border-outline-variant bg-opacity-90 backdrop-blur-md sticky top-0 z-50">
+		<nav dir="ltr" class="hidden md:flex w-screen bg-surface-container-lowest border-b border-outline-variant bg-opacity-90 backdrop-blur-md sticky top-0 z-50 animate-nav-desktop">
 			<div class="flex justify-between items-center w-full max-w-container-max mx-auto px-margin-desktop py-4">
 			<div class="flex items-center gap-4">
 				<div class="w-8 h-8 border border-neon-blue rounded-full flex items-center justify-center relative glow-border overflow-hidden">
@@ -67,38 +67,64 @@ const {
 				</div>
 			</div>
 
-
-			<!-- Language Toggle Switcher (Desktop) -->
-			<div class="flex items-center gap-1 border border-outline-variant p-1 bg-surface-container-low hud-border select-none relative z-50">
-				<button id="lang-btn-he" class="lang-btn px-2.5 py-1 font-terminal-xs text-[10px] text-on-surface-variant hover:text-neon-blue transition-all cursor-pointer relative" data-lang-select="he">
-					עברית
-					<span class="active-indicator absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-neon-blue rounded-full opacity-0 transition-opacity"></span>
-				</button>
-				<div class="w-px h-3.5 bg-outline-variant/60"></div>
-				<button id="lang-btn-en" class="lang-btn px-2.5 py-1 font-terminal-xs text-[10px] text-on-surface-variant hover:text-neon-blue transition-all cursor-pointer relative" data-lang-select="en">
-					ENGLISH
-					<span class="active-indicator absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-neon-blue rounded-full opacity-0 transition-opacity"></span>
-				</button>
+			<!-- Desktop Menu Navigation Links -->
+			<div class="hidden md:flex items-center gap-6 font-label-caps text-[11px] tracking-wider border-l border-r border-outline-variant/30 px-6 mx-4">
+				<a href="#home" class="hover:text-neon-blue hover:scale-105 transition-all py-1 flex items-center gap-1.5 text-on-surface-variant font-medium">
+					<span class="material-symbols-outlined text-[14px] text-neon-blue">home</span>
+					<span class="lang-he">ראשי</span>
+					<span class="lang-en">HOME</span>
+				</a>
+				<a href="#characters" class="hover:text-neon-blue hover:scale-105 transition-all py-1 flex items-center gap-1.5 text-on-surface-variant font-medium">
+					<span class="material-symbols-outlined text-[14px] text-neon-blue">group</span>
+					<span class="lang-he">תיקי צוות</span>
+					<span class="lang-en">DOSSIERS</span>
+				</a>
+				<a href="#lecturer" class="hover:text-neon-blue hover:scale-105 transition-all py-1 flex items-center gap-1.5 text-on-surface-variant font-medium">
+					<span class="material-symbols-outlined text-[14px] text-neon-blue">person</span>
+					<span class="lang-he">המרצה</span>
+					<span class="lang-en">LECTURER</span>
+				</a>
+				<a href="#itinerary" class="hover:text-neon-blue hover:scale-105 transition-all py-1 flex items-center gap-1.5 text-on-surface-variant font-medium">
+					<span class="material-symbols-outlined text-[14px] text-neon-blue">event</span>
+					<span class="lang-he">לוח זמנים</span>
+					<span class="lang-en">SCHEDULE</span>
+				</a>
 			</div>
 
-			<div class="flex items-center gap-4 border border-outline-variant p-2 bg-surface-container-low hud-border">
-				<div class="w-12 h-8 bg-black border border-neon-blue/30 relative overflow-hidden flex items-center justify-center">
-					<video
-						class="absolute inset-0 w-full h-full object-cover"
-						src="/signal-opt.mp4"
-						autoplay
-						muted
-						loop
-						playsinline
-					></video>
+			<!-- Language Toggle & System Status Widget Group -->
+			<div class="flex items-center gap-4">
+				<!-- Language Toggle Switcher (Desktop) -->
+				<div class="flex items-center gap-1 border border-outline-variant p-1 bg-surface-container-low hud-border select-none relative z-50">
+					<button id="lang-btn-he" class="lang-btn px-2.5 py-1 font-terminal-xs text-[10px] text-on-surface-variant hover:text-neon-blue transition-all cursor-pointer relative" data-lang-select="he">
+						עברית
+						<span class="active-indicator absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-neon-blue rounded-full opacity-0 transition-opacity"></span>
+					</button>
+					<div class="w-px h-3.5 bg-outline-variant/60"></div>
+					<button id="lang-btn-en" class="lang-btn px-2.5 py-1 font-terminal-xs text-[10px] text-on-surface-variant hover:text-neon-blue transition-all cursor-pointer relative" data-lang-select="en">
+						ENGLISH
+						<span class="active-indicator absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-neon-blue rounded-full opacity-0 transition-opacity"></span>
+					</button>
 				</div>
-				<div class="flex flex-col">
-					<span class="font-terminal-xs text-[8px] text-neon-blue">U.S. ANTARCTICA</span>
-					<span class="font-terminal-xs text-[8px] text-neon-blue">RESEARCH STATION 31</span>
-				</div>
-				<div class="flex items-center gap-1 ml-2">
-					<div class="w-1.5 h-1.5 rounded-full bg-terminal-green animate-pulse"></div>
-					<span class="font-terminal-xs text-[8px] text-terminal-green">ONLINE</span>
+
+				<div class="flex items-center gap-4 border border-outline-variant p-2 bg-surface-container-low hud-border">
+					<div class="w-12 h-8 bg-black border border-neon-blue/30 relative overflow-hidden flex items-center justify-center">
+						<video
+							class="absolute inset-0 w-full h-full object-cover"
+							src="/signal-opt.mp4"
+							autoplay
+							muted
+							loop
+							playsinline
+						></video>
+					</div>
+					<div class="flex flex-col">
+						<span class="font-terminal-xs text-[8px] text-neon-blue">U.S. ANTARCTICA</span>
+						<span class="font-terminal-xs text-[8px] text-neon-blue">RESEARCH STATION 31</span>
+					</div>
+					<div class="flex items-center gap-1 ml-2">
+						<div class="w-1.5 h-1.5 rounded-full bg-terminal-green animate-pulse"></div>
+						<span class="font-terminal-xs text-[8px] text-terminal-green">ONLINE</span>
+					</div>
 				</div>
 			</div>
 			</div>
@@ -108,7 +134,7 @@ const {
 		<slot />
 
 		<!-- Bottom Navigation (Mobile Only) -->
-		<nav dir="ltr" class="docked full-width bottom-0 z-50 md:hidden bg-surface-container-lowest border-t border-outline-variant bg-opacity-95 backdrop-blur-lg fixed left-0 w-full flex justify-around items-center px-margin-mobile py-2 shadow-lg">
+		<nav dir="ltr" class="docked full-width bottom-0 z-50 md:hidden bg-surface-container-lowest border-t border-outline-variant bg-opacity-95 backdrop-blur-lg fixed left-0 w-full flex justify-around items-center px-margin-mobile py-2 shadow-lg animate-nav-mobile">
 			<a class="flex flex-col items-center justify-center text-neon-blue bg-ghost-blue rounded-xl p-2 scale-90 transition-transform font-bold" href="#home">
 				<span class="material-symbols-outlined text-neon-blue text-xl" style="font-variation-settings: 'FILL' 1;">home</span>
 				<span class="font-label-caps text-[9px] mt-1">
@@ -116,11 +142,11 @@ const {
 					<span class="lang-en">HOME</span>
 				</span>
 			</a>
-			<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-neon-blue transition-colors" href="#itinerary">
-				<span class="material-symbols-outlined text-on-surface-variant text-xl">event</span>
+			<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-neon-blue transition-colors" href="#characters">
+				<span class="material-symbols-outlined text-on-surface-variant text-xl">group</span>
 				<span class="font-label-caps text-[9px] mt-1">
-					<span class="lang-he">לוח זמנים</span>
-					<span class="lang-en">SCHEDULE</span>
+					<span class="lang-he">תיקי צוות</span>
+					<span class="lang-en">DOSSIERS</span>
 				</span>
 			</a>
 			<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-neon-blue transition-colors" href="#lecturer">
@@ -128,6 +154,13 @@ const {
 				<span class="font-label-caps text-[9px] mt-1">
 					<span class="lang-he">המרצה</span>
 					<span class="lang-en">LECTURER</span>
+				</span>
+			</a>
+			<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-neon-blue transition-colors" href="#itinerary">
+				<span class="material-symbols-outlined text-on-surface-variant text-xl">event</span>
+				<span class="font-label-caps text-[9px] mt-1">
+					<span class="lang-he">לוח זמנים</span>
+					<span class="lang-en">SCHEDULE</span>
 				</span>
 			</a>
 			<button id="mobile-lang-toggle" class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-neon-blue transition-colors cursor-pointer select-none" aria-label="Toggle language">

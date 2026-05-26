@@ -1,0 +1,173 @@
+---
+interface Props {
+  id: string;
+  nameEn: string;
+  nameHe: string;
+  roleEn: string;
+  roleHe: string;
+  img: string;
+  statusEn: string;
+  statusHe: string;
+  statsEn: string;
+  statsHe: string;
+  index: number;
+}
+
+const {
+  id,
+  nameEn,
+  nameHe,
+  roleEn,
+  roleHe,
+  img,
+  statusEn,
+  statusHe,
+  statsEn,
+  statsHe,
+  index
+} = Astro.props;
+
+// Split heart rate and temperature parts dynamically
+const hrEn = statsEn.split('|')[0]?.trim() || "";
+const tempEn = statsEn.split('|')[1]?.trim() || "";
+const hrHe = statsHe.split('|')[0]?.trim() || "";
+const tempHe = statsHe.split('|')[1]?.trim() || "";
+---
+
+<div 
+  class="carousel-item snap-start shrink-0 w-[280px] md:w-[320px] bg-black/40 border border-outline-variant/60 relative p-4 flex flex-col justify-between group hover:border-neon-blue transition-all duration-300 hover:shadow-[0_0_20px_rgba(38,101,253,0.25)] select-none"
+  data-id={id}
+>
+  <!-- HUD Corners for individual cards -->
+  <div class="absolute top-0 left-0 w-4 h-4 border-t border-l border-outline-variant/40 group-hover:border-neon-blue transition-colors"></div>
+  <div class="absolute top-0 right-0 w-4 h-4 border-t border-r border-outline-variant/40 group-hover:border-neon-blue transition-colors"></div>
+  <div class="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-outline-variant/40 group-hover:border-neon-blue transition-colors"></div>
+  <div class="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-outline-variant/40 group-hover:border-neon-blue transition-colors"></div>
+
+  <!-- Card Header HUD -->
+  <div class="flex justify-between items-center text-[8px] font-terminal-xs text-on-surface-variant border-b border-outline-variant/20 pb-2 mb-3">
+    <span>U.S. ANTARCTIC RESEARCH PROG // ID-0{index + 1}</span>
+    <div class="flex items-center gap-1">
+      <span class="w-1 h-1 bg-terminal-green rounded-full animate-pulse"></span>
+      <span class="text-terminal-green uppercase">SECURE</span>
+    </div>
+  </div>
+
+  <!-- Image Container with filter overlay -->
+  <div class="relative w-full aspect-[3/4] bg-surface-container-low border border-outline-variant/30 overflow-hidden flex items-center justify-center">
+    <!-- Retro scanline CRT effect over image -->
+    <div class="absolute inset-0 pointer-events-none z-10 scanline opacity-30"></div>
+    <div class="absolute inset-0 pointer-events-none z-10 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+    
+    <!-- Character Image -->
+    <img 
+      src={img} 
+      alt={`Surveillance camera dossier of ${nameEn}, Outpost 31 ${roleEn}`}
+      width="300"
+      height="400"
+      decoding="async"
+      loading="lazy"
+      class="w-full h-full object-contain transition-all duration-500 scale-[0.85] group-hover:scale-[0.9] filter saturate-[0.6] sepia-[0.35] brightness-[0.75] group-hover:saturate-[1.1] group-hover:brightness-[1.0] group-hover:sepia-0"
+    />
+    
+    <!-- Temperature HUD Badge overlay -->
+    <div class="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/70 border border-outline-variant/50 text-[8px] font-terminal-xs text-hazard-orange">
+      TEMP: NORMAL
+    </div>
+  </div>
+
+  <!-- Card Content Details -->
+  <div class="mt-4 flex-grow flex flex-col justify-end">
+    <h3 class="font-headline-lg text-base md:text-lg text-white font-semibold tracking-wider">
+      <span class="lang-he">{nameHe}</span>
+      <span class="lang-en">{nameEn}</span>
+    </h3>
+    
+    <p class="font-label-caps text-[11px] text-hazard-orange tracking-widest mt-1">
+      <span class="lang-he">{roleHe}</span>
+      <span class="lang-en">{roleEn}</span>
+    </p>
+
+    <!-- Biometric status drawer (expands/glows on hover) -->
+    <div class="border-t border-outline-variant/30 mt-3 pt-3 flex flex-col gap-2.5 text-[9px] font-terminal-xs">
+      <!-- Status Text -->
+      <div class="text-neon-blue group-hover:text-terminal-green transition-colors font-bold uppercase tracking-wider">
+        <span class="lang-he">{statusHe}</span>
+        <span class="lang-en">{statusEn}</span>
+      </div>
+      
+      <!-- Animated Icons and Biometric Data -->
+      <div class="flex items-center gap-4 text-on-surface-variant/90 border-t border-outline-variant/10 pt-2 selection:bg-transparent select-none">
+        <!-- Heart Rate Metric with pulsing animation -->
+        <div class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px] text-red-500 animate-heart-beat origin-center">favorite</span>
+          <span class="pulse-tracker" data-base-bpm={hrEn.replace(/[^0-9]/g, '')}>
+            <span class="lang-he">{hrHe}</span>
+            <span class="lang-en">{hrEn}</span>
+          </span>
+        </div>
+        
+        <!-- Temperature Metric with glowing animation -->
+        <div class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px] text-hazard-orange animate-temp-glow origin-center">thermostat</span>
+          <span>
+            <span class="lang-he">{tempHe}</span>
+            <span class="lang-en">{tempEn}</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Heartbeat expansion pulse keyframes */
+  @keyframes heart-beat {
+    0%, 100% { transform: scale(0.5); }
+    15% { transform: scale(0.61); }
+    30% { transform: scale(0.525); }
+    45% { transform: scale(0.64); }
+    60% { transform: scale(0.5); }
+  }
+
+  /* Thermometer glow pulse keyframes */
+  @keyframes temp-glow {
+    0%, 100% { opacity: 0.65; filter: drop-shadow(0 0 1px rgba(245, 158, 11, 0.4)) brightness(1); transform: scale(0.5); }
+    50% { opacity: 1; filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.9)) brightness(1.3); transform: scale(0.55); }
+  }
+
+  .animate-heart-beat {
+    animation: heart-beat 1.3s infinite cubic-bezier(0.21, 0.6, 0.35, 1);
+    display: inline-block;
+  }
+
+  .animate-temp-glow {
+    animation: temp-glow 2.2s infinite ease-in-out;
+    display: inline-block;
+  }
+</style>
+
+<script>
+  // Fluctuate heart rates dynamically on the client
+  const trackers = document.querySelectorAll('.pulse-tracker');
+  if (trackers.length > 0) {
+    setInterval(() => {
+      trackers.forEach(tracker => {
+        const baseBpm = parseInt(tracker.getAttribute('data-base-bpm') || '90', 10);
+        // Vary pulse rate by up to +- 5%
+        const offsetPercent = (Math.random() * 10 - 5) / 100;
+        const currentBpm = Math.round(baseBpm * (1 + offsetPercent));
+        
+        const enLabel = tracker.querySelector('.lang-en');
+        const heLabel = tracker.querySelector('.lang-he');
+        
+        if (enLabel) {
+          enLabel.textContent = `HEART RATE: ${currentBpm} BPM`;
+        }
+        if (heLabel) {
+          heLabel.textContent = `דופק: ${currentBpm} פעימות`;
+        }
+      });
+    }, 2000 + Math.random() * 1000); // runs every 2 to 3 seconds
+  }
+</script>
