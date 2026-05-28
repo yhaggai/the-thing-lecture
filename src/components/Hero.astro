@@ -250,6 +250,10 @@ import bgImg from "../assets/background2.jpg";
 		let currentWind = 8;
 		let targetWind = 8;
 		
+		// Gyroscope tracking states
+		let gyroWindX = 0;
+		let currentGyroWindX = 0;
+
 		// Background (small, slow, subtle, dense)
 		let activeCountBg = 350;
 		const MAX_COUNT_BG = 600;
@@ -321,6 +325,46 @@ import bgImg from "../assets/background2.jpg";
 			flakesFg.push(f); 
 		}
 
+		// Device Orientation Handler (gamma left/right tilt only)
+		function handleOrientation(e: DeviceOrientationEvent) {
+			if (typeof e.gamma === 'number' && e.gamma !== null) {
+				// gamma represents left-to-right tilt in degrees [-90, 90]
+				// Map it to target gyroWindX (e.g. -15 to 15)
+				gyroWindX = (e.gamma / 90) * 15;
+			} else {
+				gyroWindX = 0;
+			}
+		}
+
+		// iOS and modern browser permission request - touch-devices only
+		const isTouchDevice = typeof window !== 'undefined' && 
+			('ontouchstart' in window || navigator.maxTouchPoints > 0);
+
+		function initGyro() {
+			if (
+				typeof DeviceOrientationEvent !== 'undefined' &&
+				typeof (DeviceOrientationEvent as any).requestPermission === 'function'
+			) {
+				(DeviceOrientationEvent as any).requestPermission()
+					.then((permissionState: string) => {
+						if (permissionState === 'granted') {
+							window.addEventListener('deviceorientation', handleOrientation);
+						}
+					})
+					.catch(console.error);
+			} else if (typeof DeviceOrientationEvent !== 'undefined') {
+				window.addEventListener('deviceorientation', handleOrientation);
+			}
+			// Clean up listener triggers
+			document.removeEventListener('click', initGyro);
+			document.removeEventListener('touchstart', initGyro);
+		}
+		
+		if (isTouchDevice) {
+			document.addEventListener('click', initGyro);
+			document.addEventListener('touchstart', initGyro);
+		}
+
 		// Randomize storm intensity values every 10 seconds
 		setInterval(() => {
 			targetWind = Math.random() * 20 - 8; // Range: -8 (heavy left gust) to 12 (heavy right gust)
@@ -336,13 +380,18 @@ import bgImg from "../assets/background2.jpg";
 			// Smoothly interpolate wind gusts
 			currentWind += (targetWind - currentWind) * 0.02;
 
+			// Smoothly interpolate gyro values
+			currentGyroWindX += (gyroWindX - currentGyroWindX) * 0.08;
+
+			const windTotal = currentWind + currentGyroWindX;
+
 			// Draw Background Snow (low z-index)
 			const activeBg = flakesBg.slice(0, activeCountBg);
 			activeBg.forEach(f => {
 				const d = 0.5 + f.layer * 0.5; 
 				f.wobble += f.wobbleSpeed; 
-				f.x += currentWind * d + Math.sin(f.wobble) * 0.8 * d; 
-				f.y += f.speed * d + Math.abs(currentWind) * 0.15;
+				f.x += windTotal * d + Math.sin(f.wobble) * 0.8 * d; 
+				f.y += f.speed * d + Math.abs(windTotal) * 0.15;
 				if(f.y > canvasBg.height + 10){
 					f.y = -10;
 					f.x = Math.random() * canvasBg.width;
@@ -363,8 +412,8 @@ import bgImg from "../assets/background2.jpg";
 			activeFg.forEach(f => {
 				const d = 0.5 + f.layer * 0.5; 
 				f.wobble += f.wobbleSpeed; 
-				f.x += currentWind * d + Math.sin(f.wobble) * 0.8 * d; 
-				f.y += f.speed * d + Math.abs(currentWind) * 0.22;
+				f.x += windTotal * d + Math.sin(f.wobble) * 0.8 * d; 
+				f.y += f.speed * d + Math.abs(windTotal) * 0.22;
 				if(f.y > canvasFg.height + 10){
 					f.y = -10;
 					f.x = Math.random() * canvasFg.width;
