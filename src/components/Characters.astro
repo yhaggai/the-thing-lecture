@@ -223,83 +223,89 @@ import CharacterCard from "./CharacterCard.astro";
 
 <style>
   .embla {
-    overflow: hidden;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .embla::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
   }
   .embla__container {
     display: flex;
   }
   .embla__slide {
     flex: 0 0 auto;
+    scroll-snap-align: start;
     min-width: 0;
   }
 </style>
 
 <script>
-  import EmblaCarousel from 'embla-carousel';
-
   const emblaNode = document.getElementById('characters-carousel');
   const prevBtn = document.getElementById('carousel-prev') as HTMLButtonElement;
   const nextBtn = document.getElementById('carousel-next') as HTMLButtonElement;
   const progressBar = document.getElementById('carousel-progress') as HTMLDivElement;
 
   if (emblaNode && prevBtn && nextBtn) {
-    const isRtl = document.documentElement.dir === 'rtl';
-    
-    // Initialize Embla Carousel with dragFree, start alignment, and correct RTL direction
-    const emblaApi = EmblaCarousel(emblaNode, {
-      align: 'start',
-      containScroll: 'trimSnaps',
-      dragFree: true,
-      direction: isRtl ? 'rtl' : 'ltr'
-    });
-
     // Arrow button events
-    prevBtn.addEventListener('click', () => emblaApi.scrollPrev());
-    nextBtn.addEventListener('click', () => emblaApi.scrollNext());
-
-    // Toggle arrow enabled states on scroll/select
-    const updateButtons = () => {
-      prevBtn.disabled = !emblaApi.canScrollPrev();
-      nextBtn.disabled = !emblaApi.canScrollNext();
-      
-      prevBtn.style.opacity = emblaApi.canScrollPrev() ? '1' : '0.4';
-      nextBtn.style.opacity = emblaApi.canScrollNext() ? '1' : '0.4';
-      
-      prevBtn.style.cursor = emblaApi.canScrollPrev() ? 'pointer' : 'not-allowed';
-      nextBtn.style.cursor = emblaApi.canScrollNext() ? 'pointer' : 'not-allowed';
+    const getScrollAmount = () => {
+      const card = emblaNode.querySelector('.embla__slide');
+      const cardWidth = card ? card.clientWidth : 300;
+      const gap = 24; // gap-6 is 24px
+      return cardWidth + gap;
     };
 
-    // Update Progress Bar
-    const updateProgress = () => {
+    prevBtn.addEventListener('click', () => {
+      const isRtl = document.documentElement.dir === 'rtl';
+      const scrollAmount = getScrollAmount();
+      // In RTL, scrolling prev moves to the right (positive scrollLeft in modern browsers)
+      const direction = isRtl ? 1 : -1;
+      emblaNode.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+    });
+
+    nextBtn.addEventListener('click', () => {
+      const isRtl = document.documentElement.dir === 'rtl';
+      const scrollAmount = getScrollAmount();
+      // In RTL, scrolling next moves to the left (negative/decreasing scrollLeft in modern browsers)
+      const direction = isRtl ? -1 : 1;
+      emblaNode.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+    });
+
+    // Toggle arrow enabled states and progress bar on scroll
+    const updateButtonsAndProgress = () => {
+      const scrollLeft = Math.abs(emblaNode.scrollLeft);
+      const maxScroll = emblaNode.scrollWidth - emblaNode.clientWidth;
+      
+      const canScrollPrev = scrollLeft > 10;
+      const canScrollNext = scrollLeft < maxScroll - 10;
+      
+      prevBtn.disabled = !canScrollPrev;
+      nextBtn.disabled = !canScrollNext;
+      
+      prevBtn.style.opacity = canScrollPrev ? '1' : '0.4';
+      nextBtn.style.opacity = canScrollNext ? '1' : '0.4';
+      
+      prevBtn.style.cursor = canScrollPrev ? 'pointer' : 'not-allowed';
+      nextBtn.style.cursor = canScrollNext ? 'pointer' : 'not-allowed';
+
       if (progressBar) {
-        const progress = Math.max(0, Math.min(1, emblaApi.scrollProgress()));
+        const progress = maxScroll > 0 ? Math.max(0, Math.min(1, scrollLeft / maxScroll)) : 1;
         progressBar.style.width = `${progress * 100}%`;
       }
     };
 
-    emblaApi.on('select', updateButtons);
-    emblaApi.on('init', updateButtons);
-    emblaApi.on('scroll', updateProgress);
-    emblaApi.on('init', updateProgress);
+    emblaNode.addEventListener('scroll', updateButtonsAndProgress);
 
     // Initial run
-    updateButtons();
-    updateProgress();
+    updateButtonsAndProgress();
 
-    // Re-initialize or update on window resize
-    window.addEventListener('resize', () => {
-      emblaApi.reInit();
-      updateButtons();
-      updateProgress();
-    });
+    // Re-run on resize
+    window.addEventListener('resize', updateButtonsAndProgress);
 
-    // Re-init when language switches (dir changes)
-    const observer = new MutationObserver(() => {
-      const currentRtl = document.documentElement.dir === 'rtl';
-      emblaApi.reInit({ direction: currentRtl ? 'rtl' : 'ltr' });
-      updateButtons();
-      updateProgress();
-    });
+    // Re-run when language switches (dir changes)
+    const observer = new MutationObserver(updateButtonsAndProgress);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['dir'] });
   }
 </script>
