@@ -296,6 +296,47 @@ import CharacterCard from "./CharacterCard.astro";
       }
     };
 
+    // Highlight the active card in view dynamically
+    const observerOptions = {
+      root: emblaNode,
+      threshold: 0.6, // Card is active if 60% of it is visible in the container
+      rootMargin: '0px'
+    };
+
+    const cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Remove active-card class from all cards
+          emblaNode.querySelectorAll('.carousel-item').forEach(card => {
+            card.classList.remove('active-card');
+          });
+          // Add active-card to the card inside this intersecting slide
+          const cardEl = entry.target.querySelector('.carousel-item');
+          if (cardEl) {
+            cardEl.classList.add('active-card');
+          }
+        }
+      });
+    }, observerOptions);
+
+    // Observe each slide wrapper
+    emblaNode.querySelectorAll('.embla__slide').forEach(slide => {
+      cardObserver.observe(slide);
+    });
+
+    // Also support manual clicks/taps on cards to snap and highlight them
+    emblaNode.querySelectorAll('.embla__slide').forEach((slide) => {
+      slide.addEventListener('click', (e) => {
+        const card = slide.querySelector('.carousel-item');
+        if (card) {
+          // Remove active-card from all others, add to this one
+          emblaNode.querySelectorAll('.carousel-item').forEach(c => c.classList.remove('active-card'));
+          card.classList.add('active-card');
+        }
+        slide.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      });
+    });
+
     emblaNode.addEventListener('scroll', updateButtonsAndProgress);
 
     // Initial run
