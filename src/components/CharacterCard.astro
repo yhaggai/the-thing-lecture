@@ -159,6 +159,21 @@ const tempHe = statsHe.split('|')[1]?.trim() || "";
   .carousel-item.active-card .status-text {
     color: #22c55e !important;
   }
+
+  /* Override active card styles when user is hovering the carousel, unless the active card itself is hovered */
+  :global(#characters-carousel:hover) .carousel-item.active-card:not(:hover) {
+    border-color: rgba(148, 163, 184, 0.6) !important;
+    box-shadow: none !important;
+  }
+  :global(#characters-carousel:hover) .carousel-item.active-card:not(:hover) .hud-corner {
+    border-color: rgba(148, 163, 184, 0.4) !important;
+  }
+  :global(#characters-carousel:hover) .carousel-item.active-card:not(:hover) img {
+    filter: saturate(0.6) sepia(0.35) brightness(0.75) !important;
+  }
+  :global(#characters-carousel:hover) .carousel-item.active-card:not(:hover) .status-text {
+    color: #2665fd !important;
+  }
 </style>
 
 <script>
