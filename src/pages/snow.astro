@@ -1,0 +1,205 @@
+---
+// src/pages/snow.astro
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Interactive Snow Effect Tutorial - Step 1</title>
+	<meta name="description" content="Learn how to build a high-performance interactive snow effect with HTML5 Canvas and vanilla JavaScript.">
+	
+	<!-- Google Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+	
+	<style>
+		:root {
+			--bg-color: #030712;
+			--panel-bg: rgba(15, 23, 42, 0.6);
+			--panel-border: rgba(255, 255, 255, 0.08);
+			--text-primary: #f3f4f6;
+			--text-secondary: #9ca3af;
+			--accent: #60a5fa;
+			--accent-glow: rgba(96, 165, 250, 0.15);
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: 'Plus Jakarta Sans', sans-serif;
+			background-color: var(--bg-color);
+			color: var(--text-primary);
+			min-height: 100vh;
+			overflow: hidden;
+			position: relative;
+		}
+
+		/* Fullscreen Canvas for the Snow Effect */
+		#snowCanvas {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 1;
+			background: radial-gradient(circle at center, #0b1528 0%, #030712 100%);
+		}
+
+		/* Educational Dashboard Overlay */
+		.dashboard {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 10;
+			pointer-events: none; /* Let clicks pass through to canvas if needed */
+			display: flex;
+			flex-col: column;
+			flex-direction: column;
+			justify-content: space-between;
+			padding: 2rem;
+		}
+
+		/* Top Navigation Header */
+		header {
+			pointer-events: auto;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			background: var(--panel-bg);
+			backdrop-filter: blur(12px);
+			border: 1px solid var(--panel-border);
+			padding: 1rem 1.5rem;
+			border-radius: 16px;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+			max-width: 1200px;
+			width: 100%;
+			margin: 0 auto;
+		}
+
+		.logo-area h1 {
+			font-family: 'Space Grotesk', sans-serif;
+			font-size: 1.5rem;
+			font-weight: 700;
+			letter-spacing: -0.02em;
+			background: linear-gradient(135deg, #ffffff 0%, #93c5fd 100%);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+		}
+
+		.step-badge {
+			background: var(--accent-glow);
+			border: 1px solid rgba(96, 165, 250, 0.3);
+			color: var(--accent);
+			padding: 0.25rem 0.75rem;
+			border-radius: 9999px;
+			font-size: 0.85rem;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+		}
+
+		/* Bottom Control Panel & Code/Tutorial explanation */
+		.tutorial-panel {
+			pointer-events: auto;
+			background: var(--panel-bg);
+			backdrop-filter: blur(16px);
+			border: 1px solid var(--panel-border);
+			padding: 1.5rem;
+			border-radius: 20px;
+			box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+			max-width: 600px;
+			width: 100%;
+			margin: 0 auto;
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+			transition: all 0.3s ease;
+		}
+
+		.tutorial-panel h2 {
+			font-family: 'Space Grotesk', sans-serif;
+			font-size: 1.25rem;
+			font-weight: 600;
+			color: #ffffff;
+		}
+
+		.tutorial-panel p {
+			font-size: 0.95rem;
+			line-height: 1.6;
+			color: var(--text-secondary);
+		}
+
+		.feature-list {
+			list-style: none;
+			display: flex;
+			flex-direction: column;
+			gap: 0.5rem;
+			margin-top: 0.5rem;
+		}
+
+		.feature-list li {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			font-size: 0.9rem;
+			color: var(--text-primary);
+		}
+
+		.feature-list li::before {
+			content: "❄";
+			color: var(--accent);
+		}
+
+		.highlight {
+			color: var(--accent);
+			font-weight: 500;
+		}
+	</style>
+</head>
+<body>
+
+	<!-- The drawing board for our snow effect -->
+	<canvas id="snowCanvas"></canvas>
+
+	<!-- Beautiful Dashboard Overlay -->
+	<div class="dashboard">
+		<header>
+			<div class="logo-area">
+				<h1>Let it Snow: Canvas Particle Tutorial</h1>
+			</div>
+			<div class="step-badge">Step 1: The Canvas Setup</div>
+		</header>
+
+		<div class="tutorial-panel">
+			<h2>Step 1: Creating the Stage 🎬</h2>
+			<p>
+				Welcome! In this tutorial, we will build a beautiful, high-performance interactive snow effect from scratch. 
+				Instead of using heavy libraries, we will write pure, clean <span class="highlight">HTML5 Canvas</span> and <span class="highlight">Vanilla JavaScript</span>.
+			</p>
+			<p>
+				We have set up our workspace with:
+			</p>
+			<ul class="feature-list">
+				<li>A full-screen <code>&lt;canvas&gt;</code> element styled to cover the viewport.</li>
+				<li>A radial gradient dark cosmic/arctic background that makes snow particles pop.</li>
+				<li>A modern glassmorphic dashboard overlay for explanations and interactive controls.</li>
+			</ul>
+			<p>
+				Ready to see the code that initializes the canvas context and handles high-DPI screens?
+			</p>
+			<p style="font-weight: 600; color: #ffffff; text-align: center; margin-top: 0.5rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.5rem;">
+				💬 Prompt <span class="highlight">"continue"</span> to progress to Step 2!
+			</p>
+		</div>
+	</div>
+
+</body>
+</html>

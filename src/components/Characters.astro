@@ -296,40 +296,47 @@ import CharacterCard from "./CharacterCard.astro";
       }
     };
 
-    // Highlight the active card in view dynamically
-    const observerOptions = {
-      root: emblaNode,
-      threshold: 0.6, // Card is active if 60% of it is visible in the container
-      rootMargin: '0px'
-    };
+    // Highlight the card closest to the center of the carousel viewport
+    const slides = Array.from(emblaNode.querySelectorAll('.embla__slide'));
 
-    const cardObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          // Remove active-card class from all cards
-          emblaNode.querySelectorAll('.carousel-item').forEach(card => {
-            card.classList.remove('active-card');
-          });
-          // Add active-card to the card inside this intersecting slide
-          const cardEl = entry.target.querySelector('.carousel-item');
-          if (cardEl) {
-            cardEl.classList.add('active-card');
-          }
+    const updateActiveCard = () => {
+      const containerRect = emblaNode.getBoundingClientRect();
+      const containerCenter = containerRect.left + containerRect.width / 2;
+
+      let closestSlide: Element | null = null;
+      let closestDistance = Infinity;
+
+      slides.forEach(slide => {
+        const slideRect = slide.getBoundingClientRect();
+        const slideCenter = slideRect.left + slideRect.width / 2;
+        const distance = Math.abs(slideCenter - containerCenter);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestSlide = slide;
         }
       });
-    }, observerOptions);
 
-    // Observe each slide wrapper
-    emblaNode.querySelectorAll('.embla__slide').forEach(slide => {
-      cardObserver.observe(slide);
-    });
+      // Remove active-card from all, add to the closest one
+      emblaNode.querySelectorAll('.carousel-item').forEach(card => {
+        card.classList.remove('active-card');
+      });
+      if (closestSlide) {
+        const cardEl = (closestSlide as Element).querySelector('.carousel-item');
+        if (cardEl) {
+          cardEl.classList.add('active-card');
+        }
+      }
+    };
+
+    emblaNode.addEventListener('scroll', updateActiveCard);
+    // Run on load after layout settles
+    requestAnimationFrame(updateActiveCard);
 
     // Also support manual clicks/taps on cards to snap and highlight them
-    emblaNode.querySelectorAll('.embla__slide').forEach((slide) => {
-      slide.addEventListener('click', (e) => {
+    slides.forEach((slide) => {
+      slide.addEventListener('click', () => {
         const card = slide.querySelector('.carousel-item');
         if (card) {
-          // Remove active-card from all others, add to this one
           emblaNode.querySelectorAll('.carousel-item').forEach(c => c.classList.remove('active-card'));
           card.classList.add('active-card');
         }
