@@ -36,14 +36,14 @@ export default function CountdownTimer() {
 
   const t = {
     he: {
-      active: "שידור פעיל / ההקרנה החלה",
+      active: "האירוע הסתיים. למה שלא פשוט נחכה פה קצת... נראה מה יקרה.",
       days: "ימים",
       hours: "שעות",
       minutes: "דקות",
       seconds: "שניות"
     },
     en: {
-      active: "TRANSMISSION ACTIVE / SCREENING STARTED",
+      active: "EVENT ENDED. WHY DON'T WE JUST WAIT HERE FOR A LITTLE WHILE... SEE WHAT HAPPENS.",
       days: "DAYS",
       hours: "HOURS",
       minutes: "MINS",
